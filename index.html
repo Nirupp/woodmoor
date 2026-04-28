@@ -3,897 +3,336 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Woodmoor Liquor Store</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <title>Woodmoor Lounge – Liquor · Beer · Wine</title>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --gold: #c9a84c;
-      --gold-light: #e8c97a;
-      --dark: #0f0f0f;
-      --dark2: #1a1a1a;
-      --dark3: #252525;
-      --dark4: #2f2f2f;
-      --text: #e8e8e8;
-      --text-muted: #999;
-      --red: #c0392b;
+      --red:      #b03030;
+      --red-dark: #8a2020;
+      --red-soft: #f9efef;
+      --bg:       #f7f4ef;
+      --bg2:      #ffffff;
+      --border:   #e8e0d4;
+      --dark:     #1c1a18;
+      --mid:      #4a4540;
+      --muted:    #8a8078;
+      --white:    #ffffff;
     }
 
     html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--dark); }
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background: var(--dark);
-      color: var(--text);
-      line-height: 1.6;
-    }
+    /* TICKER */
+    .ticker { background: var(--dark); color: #f5c842; font-family: 'Oswald', sans-serif; font-size: .72rem; letter-spacing: 2px; text-transform: uppercase; padding: 7px 0; overflow: hidden; white-space: nowrap; }
+    .ticker-inner { display: inline-block; animation: scroll 35s linear infinite; }
+    @keyframes scroll { from { transform: translateX(100vw); } to { transform: translateX(-100%); } }
 
-    /* ── NAVBAR ── */
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      background: rgba(15,15,15,0.95);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(201,168,76,0.2);
-      padding: 0 2rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 68px;
-    }
+    /* NAV */
+    nav { background: var(--bg2); border-bottom: 3px solid var(--red); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,.08); }
+    .nav-top { display: flex; align-items: center; justify-content: space-between; padding: .85rem 2rem; max-width: 1200px; margin: 0 auto; }
+    .logo-main { font-family: 'Anton', sans-serif; font-size: clamp(1.3rem,3.5vw,1.8rem); color: var(--red); letter-spacing: 3px; text-decoration: none; line-height: 1; }
+    .logo-sub { font-family: 'Oswald', sans-serif; font-size: .6rem; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; margin-top: 3px; }
+    .nav-links { display: flex; align-items: center; gap: .25rem; list-style: none; }
+    .nav-links a { font-family: 'Oswald', sans-serif; font-size: .78rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--mid); text-decoration: none; padding: .45rem .9rem; border-radius: 3px; transition: color .2s, background .2s; }
+    .nav-links a:hover { color: var(--red); background: var(--red-soft); }
+    .nav-cta { background: var(--red) !important; color: var(--white) !important; font-weight: 600 !important; }
+    .nav-cta:hover { background: var(--red-dark) !important; }
+    .open-pill { display: flex; align-items: center; gap: 5px; font-family: 'Oswald', sans-serif; font-size: .7rem; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--mid); }
+    .open-dot { width: 8px; height: 8px; border-radius: 50%; background: #3cba54; box-shadow: 0 0 6px #3cba54; flex-shrink: 0; }
 
-    .logo {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.7rem;
-      color: var(--gold);
-      letter-spacing: 2px;
-      text-decoration: none;
-    }
+    /* HERO */
+    .hero { background: var(--dark); position: relative; overflow: hidden; padding: 5.5rem 2rem 4.5rem; text-align: center; }
+    .hero::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(-55deg, transparent, transparent 40px, rgba(176,48,48,.04) 40px, rgba(176,48,48,.04) 42px); }
+    .hero::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: var(--red); }
+    .hero-inner { position: relative; max-width: 800px; margin: 0 auto; }
+    .hero-eyebrow { display: inline-flex; align-items: center; gap: .5rem; font-family: 'Oswald', sans-serif; font-size: .68rem; letter-spacing: 4px; text-transform: uppercase; color: #f5c842; margin-bottom: 1.25rem; }
+    .hero-eyebrow::before, .hero-eyebrow::after { content: '—'; opacity: .4; }
+    .hero h1 { font-family: 'Anton', sans-serif; font-size: clamp(3.2rem,11vw,6.5rem); color: var(--white); letter-spacing: 5px; line-height: .92; }
+    .hero-sub { font-family: 'Oswald', sans-serif; font-size: clamp(.9rem,2.5vw,1.2rem); letter-spacing: 6px; color: var(--red); text-transform: uppercase; margin: .9rem 0 1.5rem; }
+    .hero p { color: rgba(255,255,255,.55); font-size: .95rem; max-width: 480px; margin: 0 auto 2.25rem; line-height: 1.7; }
+    .hero-btns { display: flex; gap: .85rem; justify-content: center; flex-wrap: wrap; margin-bottom: 3rem; }
+    .btn-red { background: var(--red); color: var(--white); font-family: 'Oswald', sans-serif; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; font-size: .85rem; padding: .8rem 2rem; border: none; border-radius: 3px; cursor: pointer; text-decoration: none; transition: background .2s, transform .1s; }
+    .btn-red:hover { background: var(--red-dark); transform: translateY(-2px); }
+    .btn-ghost { background: transparent; color: rgba(255,255,255,.7); font-family: 'Oswald', sans-serif; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; font-size: .85rem; padding: .8rem 2rem; border: 1px solid rgba(255,255,255,.2); border-radius: 3px; cursor: pointer; text-decoration: none; transition: border-color .2s, color .2s; }
+    .btn-ghost:hover { border-color: rgba(255,255,255,.5); color: var(--white); }
+    .hero-stats { display: flex; justify-content: center; gap: 0; flex-wrap: wrap; border: 1px solid rgba(255,255,255,.08); border-radius: 6px; overflow: hidden; max-width: 520px; margin: 0 auto; }
+    .stat { flex: 1; min-width: 120px; padding: 1rem; border-right: 1px solid rgba(255,255,255,.08); text-align: center; }
+    .stat:last-child { border-right: none; }
+    .stat-n { font-family: 'Anton', sans-serif; font-size: 1.6rem; color: var(--white); letter-spacing: 1px; }
+    .stat-l { font-family: 'Oswald', sans-serif; font-size: .6rem; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,.4); margin-top: 2px; }
 
-    .logo span {
-      display: block;
-      font-family: 'Inter', sans-serif;
-      font-size: 0.55rem;
-      letter-spacing: 4px;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      margin-top: -4px;
-    }
+    /* INFO STRIP */
+    .info-strip { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; justify-content: center; gap: 2.5rem; flex-wrap: wrap; }
+    .info-item { display: flex; align-items: center; gap: .5rem; font-size: .82rem; color: var(--mid); }
+    .info-item strong { color: var(--dark); font-weight: 600; }
 
-    .nav-links {
-      display: flex;
-      gap: 2rem;
-      list-style: none;
-    }
-
-    .nav-links a {
-      text-decoration: none;
-      color: var(--text-muted);
-      font-size: 0.85rem;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      transition: color 0.2s;
-    }
-
-    .nav-links a:hover { color: var(--gold); }
-
-    .nav-cta {
-      background: var(--gold);
-      color: #000 !important;
-      padding: 0.5rem 1.2rem;
-      border-radius: 4px;
-      font-weight: 600 !important;
-      transition: background 0.2s !important;
-    }
-
-    .nav-cta:hover { background: var(--gold-light) !important; color: #000 !important; }
-
-    /* ── HERO ── */
-    .hero {
-      min-height: 100vh;
-      background:
-        linear-gradient(to bottom, rgba(15,15,15,0.7) 0%, rgba(15,15,15,0.9) 100%),
-        url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1600&q=80') center/cover no-repeat;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 6rem 2rem 4rem;
-    }
-
-    .hero-inner { max-width: 700px; }
-
-    .hero-badge {
-      display: inline-block;
-      border: 1px solid var(--gold);
-      color: var(--gold);
-      font-size: 0.7rem;
-      letter-spacing: 4px;
-      text-transform: uppercase;
-      padding: 0.35rem 1rem;
-      border-radius: 2px;
-      margin-bottom: 1.5rem;
-    }
-
-    .hero h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(2.8rem, 7vw, 5rem);
-      line-height: 1.1;
-      color: #fff;
-      margin-bottom: 1.2rem;
-    }
-
-    .hero h1 em {
-      color: var(--gold);
-      font-style: normal;
-    }
-
-    .hero p {
-      font-size: 1.05rem;
-      color: var(--text-muted);
-      max-width: 480px;
-      margin: 0 auto 2rem;
-    }
-
-    .hero-actions {
-      display: flex;
-      gap: 1rem;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    .btn-primary {
-      background: var(--gold);
-      color: #000;
-      padding: 0.85rem 2rem;
-      border: none;
-      border-radius: 4px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      cursor: pointer;
-      text-decoration: none;
-      letter-spacing: 0.5px;
-      transition: background 0.2s, transform 0.1s;
-    }
-
-    .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
-
-    .btn-outline {
-      background: transparent;
-      color: var(--text);
-      padding: 0.85rem 2rem;
-      border: 1px solid rgba(255,255,255,0.3);
-      border-radius: 4px;
-      font-size: 0.9rem;
-      font-weight: 500;
-      cursor: pointer;
-      text-decoration: none;
-      letter-spacing: 0.5px;
-      transition: border-color 0.2s, color 0.2s;
-    }
-
-    .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
-
-    .hero-stats {
-      display: flex;
-      gap: 2.5rem;
-      justify-content: center;
-      margin-top: 3rem;
-      flex-wrap: wrap;
-    }
-
-    .stat { text-align: center; }
-    .stat-num {
-      font-family: 'Playfair Display', serif;
-      font-size: 2rem;
-      color: var(--gold);
-    }
-    .stat-label {
-      font-size: 0.7rem;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--text-muted);
-    }
-
-    /* ── SECTION SHARED ── */
-    section { padding: 5rem 2rem; }
-
-    .section-header {
-      text-align: center;
-      margin-bottom: 3rem;
-    }
-
-    .section-header .eyebrow {
-      font-size: 0.7rem;
-      letter-spacing: 4px;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 0.75rem;
-    }
-
-    .section-header h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(1.8rem, 4vw, 2.8rem);
-      color: #fff;
-    }
-
-    .section-header p {
-      color: var(--text-muted);
-      margin-top: 0.5rem;
-      font-size: 0.95rem;
-    }
-
+    /* SHARED */
+    section { padding: 4.5rem 1.5rem; }
     .container { max-width: 1200px; margin: 0 auto; }
+    .section-header { text-align: center; margin-bottom: 2.5rem; }
+    .s-eyebrow { font-family: 'Oswald', sans-serif; font-size: .65rem; letter-spacing: 4px; text-transform: uppercase; color: var(--red); margin-bottom: .5rem; }
+    .section-header h2 { font-family: 'Anton', sans-serif; font-size: clamp(1.8rem,4.5vw,2.8rem); letter-spacing: 2px; color: var(--dark); }
+    .s-rule { width: 40px; height: 3px; background: var(--red); margin: .65rem auto .6rem; border-radius: 2px; }
+    .section-header p { color: var(--muted); font-size: .88rem; }
 
-    /* ── DEALS ── */
-    #deals { background: var(--dark2); }
+    /* DEALS */
+    #deals { background: var(--bg); }
+    .deals-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap: 1.25rem; }
+    .deal-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; transition: transform .2s, box-shadow .2s; }
+    .deal-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,.1); }
+    .deal-top { background: var(--dark); padding: .65rem 1rem; display: flex; align-items: center; justify-content: space-between; }
+    .deal-cat { font-family: 'Oswald', sans-serif; font-size: .65rem; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,.5); }
+    .deal-badge { background: var(--red); color: var(--white); font-family: 'Oswald', sans-serif; font-weight: 700; font-size: .72rem; letter-spacing: 1px; padding: 3px 10px; border-radius: 2px; }
+    .deal-img-wrap { background: var(--bg); display: flex; align-items: center; justify-content: center; height: 180px; padding: .75rem; overflow: hidden; }
+    .deal-img-wrap img { max-height: 165px; max-width: 100%; object-fit: contain; border-radius: 4px; }
+    .deal-img-placeholder { font-size: 3.5rem; line-height: 1; }
+    .deal-body { padding: 1rem 1.25rem 1.25rem; }
+    .deal-body h3 { font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 1.1rem; color: var(--dark); margin-bottom: .3rem; }
+    .deal-body p { font-size: .8rem; color: var(--muted); margin-bottom: 1rem; line-height: 1.55; }
+    .deal-pricing { display: flex; align-items: flex-end; gap: .6rem; margin-bottom: .5rem; }
+    .d-price { font-family: 'Anton', sans-serif; font-size: 2rem; color: var(--red); line-height: 1; letter-spacing: .5px; }
+    .d-orig { font-size: .88rem; color: var(--muted); text-decoration: line-through; margin-bottom: 3px; }
+    .d-save { margin-left: auto; background: var(--red-soft); color: var(--red); border: 1px solid #e8c4c4; font-family: 'Oswald', sans-serif; font-size: .68rem; font-weight: 700; padding: 3px 8px; border-radius: 3px; }
+    .d-expires { font-size: .7rem; color: var(--muted); margin-bottom: .9rem; }
+    .deal-btn { width: 100%; background: var(--border); color: var(--muted); border: 1.5px solid var(--border); padding: .55rem; font-family: 'Oswald', sans-serif; font-weight: 600; font-size: .78rem; letter-spacing: 2px; text-transform: uppercase; border-radius: 3px; cursor: not-allowed; }
+    .deal-btn .cs-badge { display: inline-block; background: var(--muted); color: var(--white); font-size: .6rem; letter-spacing: 1px; padding: 1px 6px; border-radius: 2px; margin-left: 6px; vertical-align: middle; }
 
-    .deals-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem;
-    }
+    /* SEARCH BAR */
+    .search-wrap { margin-bottom: 1.75rem; position: relative; max-width: 480px; margin-left: auto; margin-right: auto; margin-bottom: 1.75rem; }
+    .search-wrap input { width: 100%; background: var(--bg2); border: 1.5px solid var(--border); color: var(--dark); padding: .75rem 1rem .75rem 2.75rem; border-radius: 6px; font-size: .9rem; font-family: 'Inter', sans-serif; outline: none; transition: border-color .2s; }
+    .search-wrap input:focus { border-color: var(--red); }
+    .search-wrap input::placeholder { color: var(--muted); }
+    .search-icon { position: absolute; left: .9rem; top: 50%; transform: translateY(-50%); font-size: 1rem; pointer-events: none; }
+    .search-count { text-align: center; font-size: .78rem; color: var(--muted); margin-top: .6rem; font-family: 'Oswald', sans-serif; letter-spacing: 1px; }
 
-    .deal-card {
-      background: var(--dark3);
-      border: 1px solid rgba(201,168,76,0.15);
-      border-radius: 8px;
-      overflow: hidden;
-      transition: transform 0.2s, border-color 0.2s;
-      position: relative;
-    }
+    /* PRODUCTS */
+    #products { background: var(--bg2); }
+    .filter-bar { display: flex; gap: .5rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1.5rem; }
+    .filter-btn { background: var(--bg); border: 1.5px solid var(--border); color: var(--mid); font-family: 'Oswald', sans-serif; font-weight: 600; font-size: .75rem; letter-spacing: 1.5px; text-transform: uppercase; padding: .4rem 1rem; border-radius: 20px; cursor: pointer; transition: all .18s; }
+    .filter-btn:hover { border-color: var(--red); color: var(--red); }
+    .filter-btn.active { background: var(--red); border-color: var(--red); color: var(--white); }
+    .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap: 1rem; }
+    .product-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 7px; overflow: hidden; transition: transform .2s, box-shadow .2s; border-top: 3px solid var(--red); }
+    .product-card:hover { transform: translateY(-3px); box-shadow: 0 6px 18px rgba(0,0,0,.1); }
+    .p-img-wrap { background: var(--bg); display: flex; align-items: center; justify-content: center; height: 160px; padding: .75rem; overflow: hidden; }
+    .p-img-wrap img { max-height: 148px; max-width: 100%; object-fit: contain; border-radius: 4px; }
+    .p-img-placeholder { font-size: 3rem; line-height: 1; }
+    .p-body { padding: .85rem 1rem 1rem; }
+    .p-cat { font-family: 'Oswald', sans-serif; font-size: .6rem; letter-spacing: 2px; text-transform: uppercase; color: var(--red); margin-bottom: .2rem; }
+    .p-body h4 { font-family: 'Oswald', sans-serif; font-weight: 600; font-size: .92rem; color: var(--dark); margin-bottom: .15rem; line-height: 1.3; }
+    .p-vol { font-size: .73rem; color: var(--muted); margin-bottom: .75rem; }
+    .p-foot { display: flex; align-items: center; justify-content: space-between; }
+    .p-price { font-family: 'Anton', sans-serif; font-size: 1.25rem; color: var(--dark); letter-spacing: .5px; }
+    .p-coming { font-family: 'Oswald', sans-serif; font-size: .62rem; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); background: var(--bg); border: 1px solid var(--border); padding: 3px 8px; border-radius: 3px; }
 
-    .deal-card:hover {
-      transform: translateY(-4px);
-      border-color: rgba(201,168,76,0.5);
-    }
+    /* LOADING / EMPTY STATES */
+    .loading-wrap { text-align: center; padding: 3rem 1rem; color: var(--muted); }
+    .spinner { display: inline-block; width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--red); border-radius: 50%; animation: spin .7s linear infinite; margin-bottom: 1rem; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .empty-state { text-align: center; padding: 3rem 1rem; color: var(--muted); }
+    .empty-state .e-icon { font-size: 2.5rem; margin-bottom: .75rem; }
+    .empty-state p { font-size: .88rem; }
 
-    .deal-ribbon {
-      position: absolute;
-      top: 14px; right: -28px;
-      background: var(--red);
-      color: #fff;
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      padding: 4px 36px;
-      transform: rotate(45deg);
-      transform-origin: center;
-    }
+    /* SHEET SETUP BANNER (shown until URL is configured) */
+    .setup-banner { background: #fffbea; border: 1.5px dashed #d4a017; border-radius: 6px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; font-size: .82rem; color: #7a5c00; line-height: 1.6; }
+    .setup-banner strong { color: #5a4200; }
+    .setup-banner code { background: #fef3c7; padding: 1px 5px; border-radius: 3px; font-size: .78rem; font-family: monospace; }
 
-    .deal-img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-      display: block;
-      background: var(--dark4);
-    }
-
-    .deal-img-placeholder {
-      width: 100%;
-      height: 200px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 4rem;
-      background: linear-gradient(135deg, var(--dark4), var(--dark3));
-    }
-
-    .deal-body { padding: 1.25rem; }
-
-    .deal-tag {
-      font-size: 0.65rem;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 0.4rem;
-    }
-
-    .deal-body h3 {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.15rem;
-      color: #fff;
-      margin-bottom: 0.3rem;
-    }
-
-    .deal-body p {
-      font-size: 0.82rem;
-      color: var(--text-muted);
-      margin-bottom: 1rem;
-      line-height: 1.5;
-    }
-
-    .deal-pricing {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-
-    .deal-price {
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: var(--gold);
-    }
-
-    .deal-original {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      text-decoration: line-through;
-    }
-
-    .deal-savings {
-      margin-left: auto;
-      background: rgba(192,57,43,0.2);
-      color: #e74c3c;
-      font-size: 0.7rem;
-      font-weight: 600;
-      padding: 2px 8px;
-      border-radius: 3px;
-      letter-spacing: 0.5px;
-    }
-
-    .deal-expires {
-      font-size: 0.7rem;
-      color: var(--text-muted);
-      margin-top: 0.5rem;
-    }
-
-    /* ── PRODUCTS ── */
-    #products { background: var(--dark); }
-
-    .filter-bar {
-      display: flex;
-      gap: 0.75rem;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-bottom: 2.5rem;
-    }
-
-    .filter-btn {
-      background: transparent;
-      border: 1px solid var(--dark4);
-      color: var(--text-muted);
-      padding: 0.45rem 1.1rem;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      cursor: pointer;
-      transition: all 0.2s;
-      letter-spacing: 0.5px;
-    }
-
-    .filter-btn:hover, .filter-btn.active {
-      background: var(--gold);
-      border-color: var(--gold);
-      color: #000;
-    }
-
-    .products-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 1.25rem;
-    }
-
-    .product-card {
-      background: var(--dark2);
-      border: 1px solid var(--dark4);
-      border-radius: 8px;
-      overflow: hidden;
-      transition: transform 0.2s, border-color 0.2s;
-      cursor: pointer;
-    }
-
-    .product-card:hover {
-      transform: translateY(-3px);
-      border-color: rgba(201,168,76,0.4);
-    }
-
-    .product-img-wrap {
-      height: 180px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(135deg, var(--dark3), var(--dark4));
-      font-size: 3.5rem;
-    }
-
-    .product-body { padding: 1rem; }
-
-    .product-category {
-      font-size: 0.65rem;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 0.3rem;
-    }
-
-    .product-body h4 {
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 0.2rem;
-    }
-
-    .product-sub {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      margin-bottom: 0.8rem;
-    }
-
-    .product-footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .product-price {
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: var(--gold);
-    }
-
-    .add-btn {
-      background: var(--gold);
-      color: #000;
-      border: none;
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      font-size: 1.2rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.2s;
-      line-height: 1;
-    }
-
-    .add-btn:hover { background: var(--gold-light); }
-
-    /* ── ORDER FORM ── */
-    #order { background: var(--dark2); }
-
-    .order-wrap {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 3rem;
-      align-items: start;
-    }
-
-    @media (max-width: 768px) {
-      .order-wrap { grid-template-columns: 1fr; }
-    }
-
-    .order-info h3 {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.6rem;
-      color: #fff;
-      margin-bottom: 1rem;
-    }
-
-    .order-info p {
-      color: var(--text-muted);
-      font-size: 0.9rem;
-      line-height: 1.7;
-      margin-bottom: 1.5rem;
-    }
-
-    .pickup-steps { list-style: none; }
-
-    .pickup-steps li {
-      display: flex;
-      gap: 1rem;
-      align-items: flex-start;
-      margin-bottom: 1rem;
-      font-size: 0.88rem;
-      color: var(--text-muted);
-    }
-
-    .step-num {
-      flex-shrink: 0;
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      background: var(--gold);
-      color: #000;
-      font-weight: 700;
-      font-size: 0.75rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .order-hours {
-      background: var(--dark3);
-      border: 1px solid rgba(201,168,76,0.15);
-      border-radius: 6px;
-      padding: 1rem 1.25rem;
-      margin-top: 1.5rem;
-    }
-
-    .order-hours h4 {
-      font-size: 0.75rem;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 0.75rem;
-    }
-
-    .hours-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.82rem;
-      padding: 0.3rem 0;
-      border-bottom: 1px solid var(--dark4);
-      color: var(--text-muted);
-    }
-
-    .hours-row:last-child { border-bottom: none; }
-    .hours-row span:last-child { color: var(--text); }
-
-    .order-form {
-      background: var(--dark3);
-      border: 1px solid rgba(201,168,76,0.15);
-      border-radius: 8px;
-      padding: 2rem;
-    }
-
-    .order-form h3 {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.3rem;
-      color: #fff;
-      margin-bottom: 1.5rem;
-    }
-
-    .form-group { margin-bottom: 1.1rem; }
-
-    .form-group label {
-      display: block;
-      font-size: 0.75rem;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      margin-bottom: 0.4rem;
-    }
-
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-      width: 100%;
-      background: var(--dark4);
-      border: 1px solid rgba(255,255,255,0.08);
-      color: var(--text);
-      padding: 0.7rem 0.9rem;
-      border-radius: 5px;
-      font-size: 0.9rem;
-      font-family: 'Inter', sans-serif;
-      transition: border-color 0.2s;
-      outline: none;
-    }
-
-    .form-group input:focus,
-    .form-group select:focus,
-    .form-group textarea:focus {
-      border-color: var(--gold);
-    }
-
+    /* ORDER */
+    #order { background: var(--bg); }
+    .order-wrap { display: grid; grid-template-columns: 1fr 1.1fr; gap: 3rem; align-items: start; }
+    .order-info h3 { font-family: 'Anton', sans-serif; font-size: 1.7rem; letter-spacing: 2px; color: var(--dark); margin-bottom: .75rem; }
+    .order-info > p { color: var(--muted); font-size: .88rem; line-height: 1.7; margin-bottom: 1.5rem; }
+    .steps { list-style: none; }
+    .steps li { display: flex; gap: .85rem; align-items: flex-start; margin-bottom: .9rem; font-size: .87rem; color: var(--mid); }
+    .step-n { flex-shrink: 0; width: 25px; height: 25px; border-radius: 50%; background: var(--red); color: var(--white); font-weight: 700; font-size: .72rem; display: flex; align-items: center; justify-content: center; }
+    .hours-box { background: var(--bg2); border: 1px solid var(--border); border-radius: 6px; padding: 1rem 1.25rem; margin-top: 1.5rem; }
+    .hours-box h4 { font-family: 'Oswald', sans-serif; font-size: .65rem; letter-spacing: 3px; text-transform: uppercase; color: var(--red); margin-bottom: .75rem; }
+    .hr-row { display: flex; justify-content: space-between; font-size: .82rem; padding: .35rem 0; border-bottom: 1px solid var(--border); color: var(--muted); }
+    .hr-row:last-child { border-bottom: none; }
+    .hr-row span:last-child { color: var(--dark); font-weight: 500; }
+    .order-form { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 2rem; box-shadow: 0 4px 20px rgba(0,0,0,.06); border-top: 3px solid var(--red); }
+    .order-form h3 { font-family: 'Anton', sans-serif; font-size: 1.3rem; letter-spacing: 2px; color: var(--dark); margin-bottom: 1.5rem; }
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; font-family: 'Oswald', sans-serif; font-size: .65rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: .35rem; }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; background: var(--bg); border: 1.5px solid var(--border); color: var(--dark); padding: .65rem .85rem; border-radius: 4px; font-size: .88rem; font-family: 'Inter', sans-serif; transition: border-color .2s; outline: none; }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--red); background: var(--white); }
     .form-group textarea { resize: vertical; min-height: 80px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+    .age-check { display: flex; align-items: flex-start; gap: .5rem; font-size: .78rem; color: var(--muted); margin: .75rem 0 1rem; line-height: 1.5; }
+    .age-check input { width: 15px !important; height: 15px !important; accent-color: var(--red); margin-top: 2px; flex-shrink: 0; }
+    .submit-btn { width: 100%; background: var(--red); color: var(--white); border: none; padding: .9rem; border-radius: 4px; font-family: 'Oswald', sans-serif; font-weight: 700; font-size: .95rem; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: background .2s, transform .1s; }
+    .submit-btn:hover { background: var(--red-dark); transform: translateY(-1px); }
 
-    .form-group select option { background: var(--dark3); }
+    /* FOOTER */
+    footer { background: var(--dark); padding: 2.5rem 2rem; text-align: center; }
+    .f-logo { font-family: 'Anton', sans-serif; font-size: 1.6rem; color: var(--white); letter-spacing: 4px; }
+    .f-logo span { color: var(--red); }
+    .f-sub { font-family: 'Oswald', sans-serif; font-size: .62rem; letter-spacing: 4px; text-transform: uppercase; color: rgba(255,255,255,.3); margin: .3rem 0 1.25rem; }
+    .f-links { display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1.25rem; }
+    footer a { font-family: 'Oswald', sans-serif; font-size: .72rem; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,.35); text-decoration: none; transition: color .2s; }
+    footer a:hover { color: rgba(255,255,255,.75); }
+    .f-address { font-size: .82rem; color: rgba(255,255,255,.35); line-height: 1.9; }
+    .f-legal { margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid rgba(255,255,255,.07); font-size: .7rem; color: rgba(255,255,255,.2); }
 
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    /* AGE GATE */
+    .age-gate { position: fixed; inset: 0; background: rgba(10,8,6,.97); z-index: 999; display: flex; align-items: center; justify-content: center; padding: 2rem; }
+    .ag-box { max-width: 420px; width: 100%; text-align: center; }
+    .ag-logo { font-family: 'Anton', sans-serif; font-size: 2.2rem; color: var(--white); letter-spacing: 4px; }
+    .ag-logo span { color: var(--red); }
+    .ag-tagline { font-family: 'Oswald', sans-serif; font-size: .62rem; letter-spacing: 4px; color: rgba(255,255,255,.3); text-transform: uppercase; margin: .3rem 0 2rem; }
+    .ag-box h2 { font-family: 'Anton', sans-serif; font-size: 1.8rem; color: var(--white); letter-spacing: 2px; margin-bottom: .75rem; }
+    .ag-box p { font-size: .83rem; color: rgba(255,255,255,.4); margin-bottom: 2rem; line-height: 1.65; }
+    .ag-btns { display: flex; gap: .85rem; justify-content: center; }
+    .ag-yes { background: var(--red); color: var(--white); border: none; padding: .8rem 2.2rem; border-radius: 3px; font-family: 'Oswald', sans-serif; font-weight: 700; font-size: .88rem; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: background .2s; }
+    .ag-yes:hover { background: var(--red-dark); }
+    .ag-no { background: transparent; color: rgba(255,255,255,.3); border: 1px solid rgba(255,255,255,.1); padding: .8rem 2.2rem; border-radius: 3px; font-family: 'Oswald', sans-serif; font-size: .8rem; cursor: pointer; }
 
-    .age-check {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.6rem;
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      margin: 1rem 0;
-    }
-
-    .age-check input[type="checkbox"] {
-      width: 16px;
-      height: 16px;
-      accent-color: var(--gold);
-      margin-top: 2px;
-      flex-shrink: 0;
-    }
-
-    .submit-btn {
-      width: 100%;
-      background: var(--gold);
-      color: #000;
-      border: none;
-      padding: 0.95rem;
-      border-radius: 5px;
-      font-size: 0.95rem;
-      font-weight: 700;
-      cursor: pointer;
-      letter-spacing: 0.5px;
-      transition: background 0.2s, transform 0.1s;
-    }
-
-    .submit-btn:hover { background: var(--gold-light); transform: translateY(-1px); }
-
-    /* ── TOAST ── */
-    .toast {
-      position: fixed;
-      bottom: 2rem;
-      right: 2rem;
-      background: var(--dark3);
-      border: 1px solid var(--gold);
-      color: var(--text);
-      padding: 1rem 1.5rem;
-      border-radius: 6px;
-      font-size: 0.9rem;
-      z-index: 999;
-      transform: translateY(100px);
-      opacity: 0;
-      transition: all 0.3s ease;
-    }
-
+    /* TOAST */
+    .toast { position: fixed; bottom: 1.5rem; right: 1.5rem; background: var(--dark); color: var(--white); border-left: 3px solid var(--red); padding: .85rem 1.25rem; border-radius: 5px; font-size: .85rem; z-index: 9999; box-shadow: 0 4px 20px rgba(0,0,0,.25); transform: translateY(80px); opacity: 0; transition: all .28s ease; max-width: 280px; }
     .toast.show { transform: translateY(0); opacity: 1; }
-    .toast strong { color: var(--gold); }
+    .toast strong { color: #f5a0a0; }
 
-    /* ── CART BADGE ── */
-    .cart-wrap { position: relative; cursor: pointer; }
-
-    .cart-badge {
-      position: absolute;
-      top: -8px; right: -8px;
-      background: var(--gold);
-      color: #000;
-      font-size: 0.65rem;
-      font-weight: 700;
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    /* ── FOOTER ── */
-    footer {
-      background: #080808;
-      border-top: 1px solid rgba(201,168,76,0.1);
-      padding: 3rem 2rem;
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 0.82rem;
-    }
-
-    footer .footer-logo {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.4rem;
-      color: var(--gold);
-      margin-bottom: 0.5rem;
-    }
-
-    footer p { margin-bottom: 0.3rem; }
-
-    footer .footer-links {
-      display: flex;
-      justify-content: center;
-      gap: 1.5rem;
-      margin: 1rem 0;
-      flex-wrap: wrap;
-    }
-
-    footer a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
-    footer a:hover { color: var(--gold); }
-
-    .age-gate {
-      position: fixed;
-      inset: 0;
-      background: rgba(10,10,10,0.97);
-      z-index: 999;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
-    }
-
-    .age-gate-box {
-      max-width: 420px;
-      width: 100%;
-      text-align: center;
-    }
-
-    .age-gate-box .ag-logo {
-      font-family: 'Playfair Display', serif;
-      font-size: 2.5rem;
-      color: var(--gold);
-      margin-bottom: 0.25rem;
-    }
-
-    .age-gate-box .ag-sub {
-      font-size: 0.65rem;
-      letter-spacing: 4px;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      margin-bottom: 2rem;
-    }
-
-    .age-gate-box h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.6rem;
-      color: #fff;
-      margin-bottom: 0.75rem;
-    }
-
-    .age-gate-box p {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-bottom: 2rem;
-      line-height: 1.6;
-    }
-
-    .age-gate-actions { display: flex; gap: 1rem; justify-content: center; }
-
-    .ag-yes {
-      background: var(--gold);
-      color: #000;
-      border: none;
-      padding: 0.8rem 2rem;
-      border-radius: 4px;
-      font-size: 0.9rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    .ag-yes:hover { background: var(--gold-light); }
-
-    .ag-no {
-      background: transparent;
-      color: var(--text-muted);
-      border: 1px solid var(--dark4);
-      padding: 0.8rem 2rem;
-      border-radius: 4px;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: border-color 0.2s;
-    }
-
-    .ag-no:hover { border-color: var(--text-muted); }
-
-    @media (max-width: 600px) {
+    @media (max-width: 820px) {
+      .order-wrap { grid-template-columns: 1fr; }
       .nav-links { display: none; }
-      .form-row { grid-template-columns: 1fr; }
+      .open-pill { display: none; }
     }
+    @media (max-width: 480px) { .form-row { grid-template-columns: 1fr; } }
+
+    /* CART BUTTON ON CARDS */
+    .p-cart-btn { background: var(--red); color: var(--white); border: none; padding: 5px 12px; border-radius: 4px; font-family: 'Oswald', sans-serif; font-weight: 600; font-size: .72rem; letter-spacing: 1px; cursor: pointer; transition: background .18s; white-space: nowrap; }
+    .p-cart-btn:hover { background: var(--red-dark); }
+    .p-cart-btn.in-cart { background: #16a34a; }
+    .p-cart-btn.in-cart:hover { background: #15803d; }
+    .deal-cart-btn { width: 100%; background: var(--red); color: var(--white); border: none; padding: .58rem; font-family: 'Oswald', sans-serif; font-weight: 700; font-size: .82rem; letter-spacing: 2px; text-transform: uppercase; border-radius: 3px; cursor: pointer; transition: background .18s; }
+    .deal-cart-btn:hover { background: var(--red-dark); }
+    .deal-cart-btn.in-cart { background: #16a34a; }
+
+    /* CART ICON IN NAVBAR */
+    .cart-icon-btn { position: relative; background: none; border: 1.5px solid var(--border); border-radius: 6px; padding: .38rem .75rem; font-size: 1.1rem; cursor: pointer; color: var(--dark); transition: border-color .18s; line-height: 1; }
+    .cart-icon-btn:hover { border-color: var(--red); }
+    .cart-badge { position: absolute; top: -7px; right: -7px; background: var(--red); color: var(--white); font-family: 'Oswald', sans-serif; font-size: .6rem; font-weight: 700; min-width: 18px; height: 18px; border-radius: 9px; display: flex; align-items: center; justify-content: center; padding: 0 4px; }
+
+    /* CART OVERLAY + DRAWER */
+    .cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 200; opacity: 0; pointer-events: none; transition: opacity .25s; }
+    .cart-overlay.open { opacity: 1; pointer-events: all; }
+    .cart-drawer { position: fixed; top: 0; right: 0; bottom: 0; width: min(420px, 95vw); background: var(--bg2); z-index: 201; display: flex; flex-direction: column; box-shadow: -4px 0 28px rgba(0,0,0,.18); transform: translateX(100%); transition: transform .28s cubic-bezier(.4,0,.2,1); }
+    .cart-drawer.open { transform: translateX(0); }
+    .cart-head { display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 1.25rem; border-bottom: 2px solid var(--border); flex-shrink: 0; }
+    .cart-head h3 { font-family: 'Anton', sans-serif; font-size: 1.1rem; letter-spacing: 2px; color: var(--dark); }
+    .cart-close { background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--muted); line-height: 1; padding: .2rem; }
+    .cart-close:hover { color: var(--red); }
+    .cart-body { flex: 1; overflow-y: auto; padding: .75rem 1.25rem; }
+    .cart-empty { text-align: center; padding: 3rem 1rem; color: var(--muted); }
+    .cart-empty .ce-icon { font-size: 2.5rem; margin-bottom: .75rem; }
+    .cart-empty p { font-size: .85rem; line-height: 1.6; }
+    .cart-item-row { display: flex; align-items: center; gap: .65rem; padding: .85rem 0; border-bottom: 1px solid var(--border); }
+    .ci-info { flex: 1; min-width: 0; }
+    .ci-name { font-family: 'Oswald', sans-serif; font-weight: 600; font-size: .9rem; color: var(--dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .ci-size { font-size: .7rem; color: var(--muted); margin-top: 1px; }
+    .ci-qty { display: flex; align-items: center; gap: .35rem; flex-shrink: 0; }
+    .qty-btn { background: var(--bg); border: 1.5px solid var(--border); width: 26px; height: 26px; border-radius: 4px; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--dark); font-weight: 700; line-height: 1; }
+    .qty-btn:hover { border-color: var(--red); color: var(--red); }
+    .qty-val { font-family: 'Oswald', sans-serif; font-weight: 700; font-size: .9rem; min-width: 20px; text-align: center; }
+    .ci-price { font-family: 'Anton', sans-serif; font-size: 1rem; color: var(--red); flex-shrink: 0; }
+    .ci-remove { background: none; border: none; color: var(--muted); font-size: 1rem; cursor: pointer; padding: .2rem .25rem; flex-shrink: 0; }
+    .ci-remove:hover { color: var(--red); }
+    .cart-foot { border-top: 2px solid var(--border); padding: 1.1rem 1.25rem; flex-shrink: 0; }
+    .cart-total-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: .65rem; }
+    .ct-label { font-family: 'Oswald', sans-serif; font-size: .65rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+    .ct-amount { font-family: 'Anton', sans-serif; font-size: 1.7rem; color: var(--dark); }
+    .pay-store-note { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 4px; padding: .5rem .75rem; font-size: .75rem; color: #15803d; margin-bottom: .85rem; text-align: center; font-weight: 500; }
+    .cart-checkout-btn { width: 100%; background: var(--red); color: var(--white); border: none; padding: .88rem; border-radius: 4px; font-family: 'Oswald', sans-serif; font-weight: 700; font-size: .95rem; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: background .18s, transform .1s; }
+    .cart-checkout-btn:hover { background: var(--red-dark); transform: translateY(-1px); }
+    .cart-checkout-btn:disabled { background: var(--muted); cursor: not-allowed; transform: none; }
   </style>
 </head>
 <body>
 
 <!-- AGE GATE -->
 <div class="age-gate" id="ageGate">
-  <div class="age-gate-box">
-    <div class="ag-logo">Woodmoor</div>
-    <div class="ag-sub">Fine Spirits &amp; Wine</div>
-    <h2>Are you 21 or older?</h2>
-    <p>You must be of legal drinking age to enter this site. By clicking "Yes" you confirm you are 21 years of age or older.</p>
-    <div class="age-gate-actions">
-      <button class="ag-yes" onclick="enterSite()">Yes, I'm 21+</button>
-      <button class="ag-no" onclick="document.getElementById('ageGate').innerHTML='<p style=color:var(--text-muted);padding:2rem>You must be 21+ to enter.</p>'">No</button>
+  <div class="ag-box">
+    <div class="ag-logo">WOODMOOR <span>LOUNGE</span></div>
+    <div class="ag-tagline">Liquor · Beer · Wine</div>
+    <h2>ARE YOU 21+?</h2>
+    <p>You must be of legal drinking age to enter this website. By clicking "Yes" you confirm you are 21 years of age or older.</p>
+    <div class="ag-btns">
+      <button class="ag-yes" onclick="document.getElementById('ageGate').style.display='none'">Yes, I'm 21+</button>
+      <button class="ag-no" onclick="document.getElementById('ageGate').innerHTML='<p style=padding:2rem;color:rgba(255,255,255,.3);font-family:Oswald,sans-serif;letter-spacing:2px>Must be 21+ to enter.</p>'">No</button>
     </div>
   </div>
 </div>
 
+<!-- TICKER -->
+<div class="ticker">
+  <span class="ticker-inner">🍺 Open 7 Days a Week &nbsp;·&nbsp; 🥃 Largest Whiskey Selection in Town &nbsp;·&nbsp; 🍷 Fresh Wine Arrivals Weekly &nbsp;·&nbsp; 🌵 Premium Tequila Deals &nbsp;·&nbsp; 🎉 Cold Beer Always Ready &nbsp;·&nbsp; ⭐ Serving the Community Since 2010 &nbsp;·&nbsp;</span>
+</div>
+
 <!-- NAVBAR -->
 <nav>
-  <a class="logo" href="#">Woodmoor<span>Fine Spirits &amp; Wine</span></a>
-  <ul class="nav-links">
-    <li><a href="#deals">Deals</a></li>
-    <li><a href="#products">Shop</a></li>
-    <li><a href="#order">Pickup</a></li>
-    <li><a href="#order" class="nav-cta">Order Now</a></li>
-  </ul>
-  <div class="cart-wrap" onclick="scrollToOrder()">
-    <svg width="22" height="22" fill="none" stroke="#c9a84c" stroke-width="1.8" viewBox="0 0 24 24">
-      <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/>
-      <path d="M16 10a4 4 0 01-8 0"/>
-    </svg>
-    <div class="cart-badge" id="cartBadge">0</div>
+  <div class="nav-top">
+    <div>
+      <a class="logo-main" href="#">WOODMOOR LOUNGE</a>
+      <div class="logo-sub">Liquor &nbsp;·&nbsp; Beer &nbsp;·&nbsp; Wine</div>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#deals">Deals</a></li>
+      <li><a href="#products">Shop</a></li>
+      <li><a href="#order">Pickup</a></li>
+      <li><a href="#order" class="nav-cta">Order Now</a></li>
+    </ul>
+    <div style="display:flex;align-items:center;gap:.75rem;">
+      <div class="open-pill"><div class="open-dot" id="openDot"></div><span id="openStatus">–</span></div>
+      <button class="cart-icon-btn" onclick="openCart()" title="View pickup order">
+        🛒
+        <span class="cart-badge" id="cartBadge" style="display:none">0</span>
+      </button>
+    </div>
   </div>
 </nav>
 
 <!-- HERO -->
 <section class="hero">
   <div class="hero-inner">
-    <div class="hero-badge">&#10022; Pickup Ready in 30 Minutes &#10022;</div>
-    <h1>Your Favorite <em>Spirits,</em><br/>Waiting for You</h1>
-    <p>Woodmoor's curated selection of wines, spirits, and craft beers — order online, pick up in-store.</p>
-    <div class="hero-actions">
-      <a href="#products" class="btn-primary">Shop Now</a>
-      <a href="#order" class="btn-outline">Schedule Pickup</a>
+    <h1>WOODMOOR<br/>LOUNGE</h1>
+    <div class="hero-sub">Liquor &nbsp;·&nbsp; Beer &nbsp;·&nbsp; Wine</div>
+    <p>Your neighborhood store for spirits, cold beer & fine wine. Order online, pick up in-store — no waiting in line.</p>
+    <div class="hero-btns">
+      <a href="#products" class="btn-red">Browse Products</a>
+      <a href="#deals" class="btn-ghost">See Deals</a>
     </div>
     <div class="hero-stats">
-      <div class="stat"><div class="stat-num">800+</div><div class="stat-label">Products</div></div>
-      <div class="stat"><div class="stat-num">30 min</div><div class="stat-label">Pickup Time</div></div>
-      <div class="stat"><div class="stat-num">4.9★</div><div class="stat-label">Rating</div></div>
+      <div class="stat"><div class="stat-n" id="heroCount">—</div><div class="stat-l">Products</div></div>
+      <div class="stat"><div class="stat-n">30 min</div><div class="stat-l">Pickup</div></div>
+      <div class="stat"><div class="stat-n">7 Days</div><div class="stat-l">Open</div></div>
+      <div class="stat"><div class="stat-n">4.5 ★</div><div class="stat-l">Rating</div></div>
     </div>
   </div>
 </section>
+
+<!-- INFO STRIP -->
+<div class="info-strip">
+  <div class="info-item">📍 <strong>7026 Liberty Road, Baltimore</strong></div>
+  <div class="info-item">📞 <strong>(720) 555-0199</strong></div>
+  <div class="info-item">🕙 Mon–Thu <strong>10am–12am</strong></div>
+  <div class="info-item">🕙 Fri–Sat <strong>10am–1am</strong></div>
+  <div class="info-item">🕙 Sun <strong>9:30am–10pm</strong></div>
+</div>
 
 <!-- DEALS -->
 <section id="deals">
   <div class="container">
     <div class="section-header">
-      <div class="eyebrow">This Week</div>
-      <h2>Hot Deals &amp; Promotions</h2>
-      <p>Limited-time offers — don't miss out</p>
+      <h2>HOT DEALS</h2>
+      <div class="s-rule"></div>
+      <p>Prices pulled live from our product sheet — updated by the store</p>
     </div>
-
-    <div class="deals-grid">
-
-      <div class="deal-card">
-        <div class="deal-ribbon">20% Off</div>
-        <div class="deal-img-placeholder">🥃</div>
-        <div class="deal-body">
-          <div class="deal-tag">Whiskey</div>
-          <h3>Maker's Mark Bourbon</h3>
-          <p>Smooth, full-bodied Kentucky straight bourbon whiskey with a soft, sweet finish.</p>
-          <div class="deal-pricing">
-            <span class="deal-price">$31.99</span>
-            <span class="deal-original">$39.99</span>
-            <span class="deal-savings">Save $8</span>
-          </div>
-          <div class="deal-expires">⏳ Expires May 2, 2026</div>
-        </div>
-      </div>
-
-      <div class="deal-card">
-        <div class="deal-ribbon">Buy 2</div>
-        <div class="deal-img-placeholder">🍷</div>
-        <div class="deal-body">
-          <div class="deal-tag">Wine</div>
-          <h3>Meiomi Pinot Noir</h3>
-          <p>Buy any 2 bottles and save 15%. Silky, smooth California Pinot with rich berry notes.</p>
-          <div class="deal-pricing">
-            <span class="deal-price">$16.99</span>
-            <span class="deal-original">$19.99</span>
-            <span class="deal-savings">2 for $31</span>
-          </div>
-          <div class="deal-expires">⏳ Expires April 30, 2026</div>
-        </div>
-      </div>
-
-      <div class="deal-card">
-        <div class="deal-ribbon">30% Off</div>
-        <div class="deal-img-placeholder">🍸</div>
-        <div class="deal-body">
-          <div class="deal-tag">Tequila</div>
-          <h3>Casamigos Blanco</h3>
-          <p>Ultra-premium small batch tequila. Crisp with hints of citrus, vanilla &amp; sweet agave.</p>
-          <div class="deal-pricing">
-            <span class="deal-price">$34.99</span>
-            <span class="deal-original">$49.99</span>
-            <span class="deal-savings">Save $15</span>
-          </div>
-          <div class="deal-expires">⏳ Expires May 5, 2026</div>
-        </div>
-      </div>
-
-      <div class="deal-card">
-        <div class="deal-ribbon">6-Pack</div>
-        <div class="deal-img-placeholder">🍺</div>
-        <div class="deal-body">
-          <div class="deal-tag">Beer</div>
-          <h3>Modelo Especial</h3>
-          <p>Rich, full-flavored pilsner-style lager. Six-pack deal — grab a case and save big.</p>
-          <div class="deal-pricing">
-            <span class="deal-price">$8.49</span>
-            <span class="deal-original">$10.99</span>
-            <span class="deal-savings">Save $2.50</span>
-          </div>
-          <div class="deal-expires">⏳ Expires April 28, 2026</div>
-        </div>
-      </div>
-
+    <div id="dealsContainer">
+      <div class="loading-wrap"><div class="spinner"></div><br/>Loading deals...</div>
     </div>
   </div>
 </section>
@@ -902,257 +341,95 @@
 <section id="products">
   <div class="container">
     <div class="section-header">
-      <div class="eyebrow">Full Selection</div>
-      <h2>Shop Our Collection</h2>
-      <p>Over 800 products across spirits, wine &amp; beer</p>
+      <div class="s-eyebrow">Full Selection</div>
+      <h2>SHOP OUR STORE</h2>
+      <div class="s-rule"></div>
+      <p>Inventory updated live from our product sheet</p>
     </div>
 
-    <div class="filter-bar">
+    <!-- SETUP BANNER — remove once sheet URL is configured -->
+    <div class="setup-banner" id="setupBanner">
+      <strong>⚙️ Store Owner Setup:</strong> Two things to configure in this file:
+      <br/>① <strong>Google Sheet</strong> — find <code>SHEET_CSV_URL</code> and paste your published CSV link. Sheet → <em>File → Share → Publish to web → CSV → copy URL</em>.
+      <br/>② <strong>Bottle Images</strong> — find <code>SERPER_API_KEY</code> and paste your free Serper.dev key. Sign up at <em>serper.dev</em> (no credit card) → copy key from dashboard → paste here.
+      <br/>With both set, bottle images load automatically from any product name — no image URLs needed in your sheet.
+    </div>
+
+    <!-- SEARCH -->
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="Search whiskey, vodka, wine, beer..." oninput="handleSearch()" />
+    </div>
+    <div class="search-count" id="searchCount"></div>
+
+    <!-- FILTERS -->
+    <div class="filter-bar" id="filterBar">
       <button class="filter-btn active" onclick="filterProducts(this,'all')">All</button>
-      <button class="filter-btn" onclick="filterProducts(this,'whiskey')">Whiskey</button>
-      <button class="filter-btn" onclick="filterProducts(this,'vodka')">Vodka</button>
-      <button class="filter-btn" onclick="filterProducts(this,'wine')">Wine</button>
-      <button class="filter-btn" onclick="filterProducts(this,'tequila')">Tequila</button>
-      <button class="filter-btn" onclick="filterProducts(this,'beer')">Beer</button>
-      <button class="filter-btn" onclick="filterProducts(this,'rum')">Rum</button>
     </div>
 
-    <div class="products-grid" id="productsGrid">
-
-      <div class="product-card" data-cat="whiskey">
-        <div class="product-img-wrap">🥃</div>
-        <div class="product-body">
-          <div class="product-category">Whiskey</div>
-          <h4>Jack Daniel's Old No. 7</h4>
-          <div class="product-sub">Tennessee Whiskey · 750ml</div>
-          <div class="product-footer">
-            <span class="product-price">$24.99</span>
-            <button class="add-btn" onclick="addToCart(event,'Jack Daniel\'s')">+</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="product-card" data-cat="whiskey">
-        <div class="product-img-wrap">🥃</div>
-        <div class="product-body">
-          <div class="product-category">Whiskey</div>
-          <h4>Johnnie Walker Black</h4>
-          <div class="product-sub">Blended Scotch · 750ml</div>
-          <div class="product-footer">
-            <span class="product-price">$35.99</span>
-            <button class="add-btn" onclick="addToCart(event,'Johnnie Walker Black')">+</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="product-card" data-cat="vodka">
-        <div class="product-img-wrap">🍸</div>
-        <div class="product-body">
-          <div class="product-category">Vodka</div>
-          <h4>Grey Goose</h4>
-          <div class="product-sub">French Vodka · 750ml</div>
-          <div class="product-footer">
-            <span class="product-price">$31.99</span>
-            <button class="add-btn" onclick="addToCart(event,'Grey Goose')">+</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="product-card" data-cat="vodka">
-        <div class="product-img-wrap">🍸</div>
-        <div class="product-body">
-          <div class="product-category">Vodka</div>
-          <h4>Tito's Handmade</h4>
-          <div class="product-sub">American Vodka · 750ml</div>
-          <div class="product-footer">
-            <span class="product-price">$22.99</span>
-            <button class="add-btn" onclick="addToCart(event,'Tito\'s Handmade')">+</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="product-card" data-cat="wine">
-        <div class="product-img-wrap">🍷</div>
-        <div class="product-body">
-          <div class="product-category">Wine</div>
-          <h4>Kim Crawford Sauvignon Blanc</h4>
-          <div class="product-sub">New Zealand · 750ml</div>
-          <div class="product-footer">
-            <span class="product-price">$14.99</span>
-            <button class="add-btn" onclick="addToCart(event,'Kim Crawford')">+</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="product-card" data-cat="wine">
-        <div class="product-img-wrap">🍾</div>
-        <div class="product-body">
-          <div class="product-category">Wine</div>
-          <h4>La Marca Prosecco</h4>
-          <div class="product-sub">Italian Sparkling · 750ml</div>
-          <div class="product-footer">
-            <span class="product-price">$17.99</span>
-            <button class="add-btn" onclick="addToCart(event,'La Marca Prosecco')">+</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="product-card" data-cat="tequila">
-        <div class="product-img-wrap">🌵</div>
-        <div class="product-body">
-          <div class="product-category">Tequila</div>
-          <h4>Patron Silver</h4>
-          <div class="product-sub">Blanco Tequila · 750ml</div>
-          <div class="product-footer">
-            <span class="product-price">$44.99</span>
-            <button class="add-btn" onclick="addToCart(event,'Patron Silver')">+</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="product-card" data-cat="tequila">
-        <div class="product-img-wrap">🥂</div>
-        <div class="product-body">
-          <div class="product-category">Tequila</div>
-          <h4>Don Julio Blanco</h4>
-          <div class="product-sub">100% Blue Agave · 750ml</div>
-          <div class="product-footer">
-            <span class="product-price">$52.99</span>
-            <button class="add-btn" onclick="addToCart(event,'Don Julio Blanco')">+</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="product-card" data-cat="beer">
-        <div class="product-img-wrap">🍺</div>
-        <div class="product-body">
-          <div class="product-category">Beer</div>
-          <h4>Heineken Original</h4>
-          <div class="product-sub">Dutch Lager · 12-Pack</div>
-          <div class="product-footer">
-            <span class="product-price">$17.99</span>
-            <button class="add-btn" onclick="addToCart(event,'Heineken 12pk')">+</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="product-card" data-cat="beer">
-        <div class="product-img-wrap">🍻</div>
-        <div class="product-body">
-          <div class="product-category">Beer</div>
-          <h4>Blue Moon Belgian White</h4>
-          <div class="product-sub">Craft Wheat Ale · 6-Pack</div>
-          <div class="product-footer">
-            <span class="product-price">$10.49</span>
-            <button class="add-btn" onclick="addToCart(event,'Blue Moon 6pk')">+</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="product-card" data-cat="rum">
-        <div class="product-img-wrap">🍹</div>
-        <div class="product-body">
-          <div class="product-category">Rum</div>
-          <h4>Bacardi Superior</h4>
-          <div class="product-sub">White Rum · 750ml</div>
-          <div class="product-footer">
-            <span class="product-price">$14.99</span>
-            <button class="add-btn" onclick="addToCart(event,'Bacardi Superior')">+</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="product-card" data-cat="rum">
-        <div class="product-img-wrap">🥃</div>
-        <div class="product-body">
-          <div class="product-category">Rum</div>
-          <h4>Captain Morgan Spiced</h4>
-          <div class="product-sub">Spiced Rum · 750ml</div>
-          <div class="product-footer">
-            <span class="product-price">$18.99</span>
-            <button class="add-btn" onclick="addToCart(event,'Captain Morgan')">+</button>
-          </div>
-        </div>
-      </div>
-
+    <!-- GRID -->
+    <div id="productsContainer">
+      <div class="loading-wrap"><div class="spinner"></div><br/>Loading products...</div>
     </div>
   </div>
 </section>
 
-<!-- ORDER / PICKUP -->
+<!-- ORDER -->
 <section id="order">
   <div class="container">
     <div class="section-header">
-      <div class="eyebrow">Curbside &amp; In-Store</div>
-      <h2>Schedule Your Pickup</h2>
-      <p>Order ahead and we'll have it ready when you arrive</p>
+      <div class="s-eyebrow">Curbside &amp; In-Store</div>
+      <h2>SCHEDULE PICKUP</h2>
+      <div class="s-rule"></div>
+      <p>Order ahead — we'll have it ready when you arrive</p>
     </div>
-
     <div class="order-wrap">
       <div class="order-info">
-        <h3>How It Works</h3>
-        <p>Skip the wait — place your order online and pick up in as little as 30 minutes from our store.</p>
-        <ul class="pickup-steps">
-          <li><div class="step-num">1</div><div>Browse our selection and add items to your order</div></li>
-          <li><div class="step-num">2</div><div>Fill out the pickup form with your preferred time</div></li>
-          <li><div class="step-num">3</div><div>We'll confirm your order by phone or text</div></li>
-          <li><div class="step-num">4</div><div>Walk in or pull up — your order will be ready</div></li>
+        <h3>HOW IT WORKS</h3>
+        <p>Place your order online and pick up in as little as 30 minutes. No waiting in line, no hassle.</p>
+        <ul class="steps">
+          <li><div class="step-n">1</div><div>Browse products and note what you'd like to order</div></li>
+          <li><div class="step-n">2</div><div>Fill out the form with your preferred pickup time</div></li>
+          <li><div class="step-n">3</div><div>We'll confirm your order by phone or text</div></li>
+          <li><div class="step-n">4</div><div>Walk in or pull up — your order is waiting at the counter</div></li>
         </ul>
-
-        <div class="order-hours">
+        <div class="hours-box">
           <h4>Store Hours</h4>
-          <div class="hours-row"><span>Monday – Thursday</span><span>10:00 AM – 9:00 PM</span></div>
-          <div class="hours-row"><span>Friday – Saturday</span><span>10:00 AM – 10:00 PM</span></div>
-          <div class="hours-row"><span>Sunday</span><span>11:00 AM – 8:00 PM</span></div>
+          <div class="hr-row"><span>Monday – Thursday</span><span>10:00 AM – 12:00 AM</span></div>
+          <div class="hr-row"><span>Friday – Saturday</span><span>10:00 AM – 1:00 AM</span></div>
+          <div class="hr-row"><span>Sunday</span><span>9:30 AM – 10:00 PM</span></div>
         </div>
       </div>
-
       <div class="order-form">
-        <h3>Place Your Order</h3>
+        <h3>PLACE YOUR ORDER</h3>
         <form onsubmit="submitOrder(event)">
           <div class="form-row">
-            <div class="form-group">
-              <label>First Name</label>
-              <input type="text" placeholder="John" required />
-            </div>
-            <div class="form-group">
-              <label>Last Name</label>
-              <input type="text" placeholder="Doe" required />
-            </div>
+            <div class="form-group"><label>First Name</label><input type="text" placeholder="John" required /></div>
+            <div class="form-group"><label>Last Name</label><input type="text" placeholder="Doe" required /></div>
           </div>
+          <div class="form-group"><label>Phone Number</label><input type="tel" placeholder="(720) 555-0000" required /></div>
+          <div class="form-group"><label>Email (optional)</label><input type="email" placeholder="john@example.com" /></div>
           <div class="form-group">
-            <label>Phone Number</label>
-            <input type="tel" placeholder="(555) 000-0000" required />
-          </div>
-          <div class="form-group">
-            <label>Email</label>
-            <input type="email" placeholder="john@example.com" />
-          </div>
-          <div class="form-group">
-            <label>Pickup Time</label>
+            <label>Preferred Pickup Time</label>
             <select required>
               <option value="">Select a time slot</option>
               <option>ASAP (ready in ~30 min)</option>
-              <option>12:00 PM – 12:30 PM</option>
-              <option>12:30 PM – 1:00 PM</option>
-              <option>1:00 PM – 1:30 PM</option>
-              <option>2:00 PM – 2:30 PM</option>
-              <option>3:00 PM – 3:30 PM</option>
-              <option>4:00 PM – 4:30 PM</option>
-              <option>5:00 PM – 5:30 PM</option>
-              <option>6:00 PM – 6:30 PM</option>
+              <option>12:00 PM – 12:30 PM</option><option>12:30 PM – 1:00 PM</option>
+              <option>1:00 PM – 1:30 PM</option><option>2:00 PM – 2:30 PM</option>
+              <option>3:00 PM – 3:30 PM</option><option>4:00 PM – 4:30 PM</option>
+              <option>5:00 PM – 5:30 PM</option><option>6:00 PM – 6:30 PM</option>
               <option>7:00 PM – 7:30 PM</option>
             </select>
           </div>
           <div class="form-group">
             <label>Items / Special Requests</label>
-            <textarea placeholder="List the items you'd like to order, quantities, or any special requests..."></textarea>
+            <textarea id="orderItemsArea" placeholder="Add items using the '+ Add' buttons above, or type your order here..."></textarea>
           </div>
           <div class="age-check">
             <input type="checkbox" id="ageConfirm" required />
-            <label for="ageConfirm">I confirm I am 21 years of age or older and will provide valid ID upon pickup.</label>
+            <label for="ageConfirm">I confirm I am 21 years of age or older and will present valid ID at pickup.</label>
           </div>
-          <button type="submit" class="submit-btn">Request Pickup &#8594;</button>
+          <button type="submit" class="submit-btn">Request Pickup →</button>
         </form>
       </div>
     </div>
@@ -1161,53 +438,532 @@
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-logo">Woodmoor</div>
-  <p>Fine Spirits &amp; Wine · Est. 2010</p>
-  <div class="footer-links">
-    <a href="#deals">Deals</a>
-    <a href="#products">Shop</a>
-    <a href="#order">Pickup</a>
-    <a href="#">Privacy Policy</a>
-    <a href="#">Terms of Use</a>
+  <div class="f-logo">WOODMOOR <span>LOUNGE</span></div>
+  <div class="f-sub">Liquor · Beer · Wine · Est. 2010</div>
+  <div class="f-links">
+    <a href="#deals">Deals</a><a href="#products">Shop</a>
+    <a href="#order">Pickup</a><a href="#">Privacy Policy</a>
   </div>
-  <p style="margin-top:1rem;">📍 123 Woodmoor Ave, Castle Rock, CO 80108 &nbsp;·&nbsp; 📞 (720) 555-0199</p>
-  <p style="margin-top:0.5rem;font-size:0.75rem;color:#555;">Please drink responsibly. Must be 21+ to purchase alcohol.</p>
+  <div class="f-address">📍 123 Woodmoor Ave, Castle Rock, CO 80108<br/>📞 (720) 555-0199 &nbsp;·&nbsp; Open 7 Days a Week</div>
+  <div class="f-legal">Please drink responsibly. You must be 21 or older to purchase alcohol. &copy; 2026 Woodmoor Lounge.</div>
 </footer>
 
-<!-- TOAST -->
+<!-- CART DRAWER -->
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-head">
+    <h3>🛒 PICKUP ORDER</h3>
+    <button class="cart-close" onclick="closeCart()">✕</button>
+  </div>
+  <div class="cart-body" id="cartBody">
+    <div class="cart-empty">
+      <div class="ce-icon">🛒</div>
+      <p>Your cart is empty.<br/>Browse products and tap <strong>+ Add</strong>.</p>
+    </div>
+  </div>
+  <div class="cart-foot">
+    <div class="cart-total-row">
+      <span class="ct-label">Estimated Total</span>
+      <span class="ct-amount" id="cartTotal">$0.00</span>
+    </div>
+    <div class="pay-store-note">💵 Pay at the store — no online payment needed</div>
+    <button class="cart-checkout-btn" id="cartCheckoutBtn" onclick="goToPickup()" disabled>
+      Request Pickup →
+    </button>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
-  let cartCount = 0;
+  // ─────────────────────────────────────────────────────────────
+  //  STEP 1 — Google Sheet published CSV URL
+  //
+  //  How to get it:
+  //    1. Open your Google Sheet
+  //    2. File → Share → Publish to web
+  //    3. Set "Entire Document" + "Comma-separated values (.csv)"
+  //    4. Click Publish → copy the URL → paste below
+  //
+  //  Your sheet columns (row 1 = headers, exact names matter):
+  //    Name | Category | Price | OriginalPrice | Size |
+  //    Description | IsDeals | DealLabel | DealExpiry | Emoji
+  //
+  //  (No Image column needed — images are fetched automatically by name)
+  // ─────────────────────────────────────────────────────────────
+  const SHEET_CSV_URL = '';   // ← paste URL between the quotes
 
-  function enterSite() {
-    document.getElementById('ageGate').style.display = 'none';
+  // ─────────────────────────────────────────────────────────────
+  //  STEP 2 — Serper.dev Image Search (free, 2,500 searches)
+  //
+  //  One-time setup (2 minutes, no credit card):
+  //    1. Go to serper.dev → click "Get Started Free"
+  //    2. Sign up with your email
+  //    3. Copy your API key from the dashboard
+  //    4. Paste it below
+  // ─────────────────────────────────────────────────────────────
+  const SERPER_API_KEY = '3c7423024e0b8e2984e148781f48e9452e07d603';
+
+  // ─────────────────────────────────────────────────────────────
+  //  STEP 3 — EmailJS (sends order emails to the store owner)
+  //  Free: 200 emails/month — no backend needed
+  //
+  //  Setup (5 min):
+  //    1. Go to emailjs.com → Sign Up free
+  //    2. Add Email Service → connect your Gmail → note the Service ID
+  //    3. Email Templates → Create Template → use these variables:
+  //         {{customer_name}}  {{customer_phone}}  {{customer_email}}
+  //         {{pickup_time}}    {{items_list}}       {{order_total}}
+  //    4. In the template set "To Email" to the store owner's address
+  //    5. Account → General → copy Public Key
+  // ─────────────────────────────────────────────────────────────
+  const EMAILJS_PUBLIC_KEY  = '';   // ← Account → General → Public Key
+  const EMAILJS_SERVICE_ID  = '';   // ← e.g. 'service_xxxxxx'
+  const EMAILJS_TEMPLATE_ID = '';   // ← e.g. 'template_xxxxxx'
+
+  // Fallback products shown when no sheet is connected yet
+  const FALLBACK = [
+    { Name:"Jack Daniel's Old No. 7", Category:"whiskey", Price:"24.99", OriginalPrice:"", Size:"750ml", Description:"Tennessee Whiskey", IsDeals:"FALSE", DealLabel:"", DealExpiry:"", Emoji:"🥃" },
+    { Name:"Johnnie Walker Black",    Category:"whiskey", Price:"35.99", OriginalPrice:"", Size:"750ml", Description:"Blended Scotch", IsDeals:"FALSE", DealLabel:"", DealExpiry:"", Emoji:"🥃" },
+    { Name:"Maker's Mark Bourbon",    Category:"whiskey", Price:"31.99", OriginalPrice:"39.99", Size:"750ml", Description:"Smooth Kentucky bourbon with a sweet finish", IsDeals:"TRUE", DealLabel:"20% OFF", DealExpiry:"May 2 2026", Emoji:"🥃" },
+    { Name:"Grey Goose",              Category:"vodka",   Price:"31.99", OriginalPrice:"", Size:"750ml", Description:"Premium French Vodka", IsDeals:"FALSE", DealLabel:"", DealExpiry:"", Emoji:"🍸" },
+    { Name:"Tito's Handmade",         Category:"vodka",   Price:"22.99", OriginalPrice:"", Size:"750ml", Description:"American Craft Vodka", IsDeals:"FALSE", DealLabel:"", DealExpiry:"", Emoji:"🍸" },
+    { Name:"Kim Crawford Sauv. Blanc",Category:"wine",    Price:"14.99", OriginalPrice:"", Size:"750ml", Description:"New Zealand Sauvignon Blanc", IsDeals:"FALSE", DealLabel:"", DealExpiry:"", Emoji:"🍷" },
+    { Name:"Meiomi Pinot Noir",       Category:"wine",    Price:"16.99", OriginalPrice:"19.99", Size:"750ml", Description:"Silky California Pinot with rich berry notes", IsDeals:"TRUE", DealLabel:"BUY 2", DealExpiry:"Apr 30 2026", Emoji:"🍷" },
+    { Name:"La Marca Prosecco",       Category:"wine",    Price:"17.99", OriginalPrice:"", Size:"750ml", Description:"Italian Sparkling Wine", IsDeals:"FALSE", DealLabel:"", DealExpiry:"", Emoji:"🍾" },
+    { Name:"Patron Silver",           Category:"tequila", Price:"44.99", OriginalPrice:"", Size:"750ml", Description:"Blanco Tequila", IsDeals:"FALSE", DealLabel:"", DealExpiry:"", Emoji:"🌵" },
+    { Name:"Casamigos Blanco",        Category:"tequila", Price:"34.99", OriginalPrice:"49.99", Size:"750ml", Description:"Ultra-premium small batch tequila", IsDeals:"TRUE", DealLabel:"30% OFF", DealExpiry:"May 5 2026", Emoji:"🌵" },
+    { Name:"Don Julio Blanco",        Category:"tequila", Price:"52.99", OriginalPrice:"", Size:"750ml", Description:"100% Blue Agave", IsDeals:"FALSE", DealLabel:"", DealExpiry:"", Emoji:"🥂" },
+    { Name:"Modelo Especial",         Category:"beer",    Price:"8.49",  OriginalPrice:"10.99", Size:"6-Pack", Description:"Rich pilsner-style lager, always cold", IsDeals:"TRUE", DealLabel:"6-PACK", DealExpiry:"Apr 28 2026", Emoji:"🍺" },
+    { Name:"Heineken Original",       Category:"beer",    Price:"17.99", OriginalPrice:"", Size:"12-Pack", Description:"Dutch Premium Lager", IsDeals:"FALSE", DealLabel:"", DealExpiry:"", Emoji:"🍺" },
+    { Name:"Blue Moon Belgian White", Category:"beer",    Price:"10.49", OriginalPrice:"", Size:"6-Pack",  Description:"Craft Wheat Ale", IsDeals:"FALSE", DealLabel:"", DealExpiry:"", Emoji:"🍻" },
+    { Name:"Bacardi Superior",        Category:"rum",     Price:"14.99", OriginalPrice:"", Size:"750ml", Description:"White Rum", IsDeals:"FALSE", DealLabel:"", DealExpiry:"", Emoji:"🍹" },
+    { Name:"Captain Morgan Spiced",   Category:"rum",     Price:"18.99", OriginalPrice:"", Size:"750ml", Description:"Spiced Rum", IsDeals:"FALSE", DealLabel:"", DealExpiry:"", Emoji:"🥃" },
+  ];
+
+  // ── State ──
+  let allProducts  = [];
+  let activeFilter = 'all';
+
+  // ── Boot ──
+  window.addEventListener('DOMContentLoaded', () => {
+    updateOpenStatus();
+    setInterval(updateOpenStatus, 60_000); // re-check every minute
+    if (SHEET_CSV_URL) {
+      document.getElementById('setupBanner').style.display = 'none';
+      loadFromSheet();
+    } else {
+      renderAll(FALLBACK);
+    }
+  });
+
+  // ── Fetch & parse Google Sheet CSV ──
+  async function loadFromSheet() {
+    try {
+      const res  = await fetch(SHEET_CSV_URL);
+      const text = await res.text();
+      const rows = parseCSV(text);
+      if (rows.length === 0) throw new Error('empty');
+      renderAll(rows);
+    } catch (e) {
+      console.warn('Sheet fetch failed, using fallback data.', e);
+      renderAll(FALLBACK);
+    }
   }
 
-  function scrollToOrder() {
-    document.getElementById('order').scrollIntoView({ behavior: 'smooth' });
+  function parseCSV(text) {
+    const lines   = text.trim().split('\n');
+    const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g,''));
+    return lines.slice(1).map(line => {
+      // handle quoted commas
+      const vals = [];
+      let cur = '', inQ = false;
+      for (const ch of line) {
+        if (ch === '"') { inQ = !inQ; continue; }
+        if (ch === ',' && !inQ) { vals.push(cur.trim()); cur = ''; continue; }
+        cur += ch;
+      }
+      vals.push(cur.trim());
+      const obj = {};
+      headers.forEach((h, i) => obj[h] = vals[i] || '');
+      return obj;
+    }).filter(r => r.Name);
   }
 
-  function addToCart(e, name) {
-    e.stopPropagation();
-    cartCount++;
-    document.getElementById('cartBadge').textContent = cartCount;
-    showToast(`<strong>${name}</strong> added to your order`);
+  // ── Render everything ──
+  function renderAll(products) {
+    allProducts = products;
+
+    // hero count
+    const heroEl = document.getElementById('heroCount');
+    if (heroEl) heroEl.textContent = products.length + '+';
+
+    // build filter buttons from unique categories
+    buildFilters(products);
+
+    // render deals
+    renderDeals(products.filter(p => p.IsDeals === 'TRUE' || p.IsDeals === 'true' || p.IsDeals === '1'));
+
+    // render products
+    renderProducts(products);
   }
 
-  function filterProducts(btn, cat) {
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    document.querySelectorAll('.product-card').forEach(card => {
-      const show = cat === 'all' || card.dataset.cat === cat;
-      card.style.display = show ? 'block' : 'none';
+  function buildFilters(products) {
+    const cats    = [...new Set(products.map(p => (p.Category || '').toLowerCase()).filter(Boolean))];
+    const bar     = document.getElementById('filterBar');
+    bar.innerHTML = '<button class="filter-btn active" onclick="filterProducts(this,\'all\')">All</button>';
+    cats.forEach(cat => {
+      const btn = document.createElement('button');
+      btn.className   = 'filter-btn';
+      btn.textContent = cat.charAt(0).toUpperCase() + cat.slice(1);
+      btn.onclick = () => filterProducts(btn, cat);
+      bar.appendChild(btn);
     });
   }
 
+  // ── Deals ──
+  function renderDeals(deals) {
+    const container = document.getElementById('dealsContainer');
+    if (!deals.length) {
+      container.innerHTML = '<div class="empty-state"><div class="e-icon">🏷️</div><p>No active deals right now — check back soon!</p></div>';
+      return;
+    }
+    container.innerHTML = `<div class="deals-grid">${deals.map(dealCard).join('')}</div>`;
+    lazyLoadImages(deals, 'd');
+  }
+
+  function dealCard(p) {
+    const slug = slugify(p.Name);
+    const savings = p.OriginalPrice
+      ? `<span class="d-save">${p.DealLabel || 'DEAL'}</span>`
+      : '';
+    const origPrice = p.OriginalPrice
+      ? `<span class="d-orig">$${parseFloat(p.OriginalPrice).toFixed(2)}</span>`
+      : '';
+    const directSrc = p.Image
+      ? `src="${p.Image}" onload="showImg(this,'d-emoji-${slug}')" `
+      : '';
+    return `
+      <div class="deal-card">
+        <div class="deal-top">
+          <span class="deal-cat">${p.Category || ''}</span>
+          <span class="deal-badge">${p.DealLabel || 'DEAL'}</span>
+        </div>
+        <div class="deal-img-wrap">
+          <span id="d-emoji-${slug}" class="deal-img-placeholder">${p.Emoji || '🍾'}</span>
+          <img id="d-img-${slug}" alt="${p.Name}" style="display:none" ${directSrc}onerror="hideImg(this,'d-emoji-${slug}')">
+        </div>
+        <div class="deal-body">
+          <h3>${p.Name}</h3>
+          <p>${p.Description || ''}</p>
+          <div class="deal-pricing">
+            <span class="d-price">$${parseFloat(p.Price).toFixed(2)}</span>
+            ${origPrice}${savings}
+          </div>
+          ${p.DealExpiry ? `<div class="d-expires">⏳ Expires ${p.DealExpiry}</div>` : ''}
+          <button class="deal-cart-btn${cart.some(c=>c.name===p.Name)?' in-cart':''}"
+                  onclick="handleCartBtn(this,'${esc(p.Name)}')">
+            ${cart.some(c=>c.name===p.Name)?'✓ In Cart':'+ Add to Pickup'}
+          </button>
+        </div>
+      </div>`;
+  }
+
+  // ── Products ──
+  function renderProducts(products) {
+    const query   = (document.getElementById('searchInput').value || '').toLowerCase().trim();
+    const filtered = products.filter(p => {
+      const matchCat  = activeFilter === 'all' || (p.Category || '').toLowerCase() === activeFilter;
+      const matchQ    = !query ||
+        p.Name.toLowerCase().includes(query) ||
+        (p.Category || '').toLowerCase().includes(query) ||
+        (p.Description || '').toLowerCase().includes(query) ||
+        (p.Size || '').toLowerCase().includes(query);
+      return matchCat && matchQ;
+    });
+
+    // search count
+    const countEl = document.getElementById('searchCount');
+    if (query) {
+      countEl.textContent = `${filtered.length} result${filtered.length !== 1 ? 's' : ''} for "${query}"`;
+    } else {
+      countEl.textContent = '';
+    }
+
+    const container = document.getElementById('productsContainer');
+    if (!filtered.length) {
+      container.innerHTML = `<div class="empty-state"><div class="e-icon">🔍</div><p>No products match "<strong>${query}</strong>".<br/>Try a different search or category.</p></div>`;
+      return;
+    }
+    container.innerHTML = `<div class="products-grid">${filtered.map(productCard).join('')}</div>`;
+    lazyLoadImages(filtered, 'p');
+  }
+
+  function productCard(p) {
+    const slug = slugify(p.Name);
+    const directSrc = p.Image
+      ? `src="${p.Image}" onload="showImg(this,'p-emoji-${slug}')" `
+      : '';
+    return `
+      <div class="product-card">
+        <div class="p-img-wrap">
+          <span id="p-emoji-${slug}" class="p-img-placeholder">${p.Emoji || '🍾'}</span>
+          <img id="p-img-${slug}" alt="${p.Name}" style="display:none" ${directSrc}onerror="hideImg(this,'p-emoji-${slug}')">
+        </div>
+        <div class="p-body">
+          <div class="p-cat">${p.Category || ''}</div>
+          <h4>${p.Name}</h4>
+          <div class="p-vol">${p.Description || ''} · ${p.Size || ''}</div>
+          <div class="p-foot">
+            <span class="p-price">$${parseFloat(p.Price).toFixed(2)}</span>
+            <button class="p-cart-btn${cart.some(c=>c.name===p.Name)?' in-cart':''}"
+                    onclick="handleCartBtn(this,'${esc(p.Name)}')">
+              ${cart.some(c=>c.name===p.Name)?'✓ In Cart':'+ Add'}
+            </button>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  // ── Filtering & Search ──
+  function filterProducts(btn, cat) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeFilter = cat;
+    renderProducts(allProducts);
+  }
+
+  function handleSearch() {
+    activeFilter = 'all';
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    const allBtn = document.querySelector('.filter-btn');
+    if (allBtn) allBtn.classList.add('active');
+    renderProducts(allProducts);
+  }
+
+  // ── Cart state ──
+  let cart = [];
+
+  function addToCart(name) {
+    const p = allProducts.find(x => x.Name === name);
+    if (!p) return;
+    const existing = cart.find(c => c.name === name);
+    if (existing) { existing.qty++; }
+    else { cart.push({ name: p.Name, size: p.Size || '', price: parseFloat(p.Price) || 0, emoji: p.Emoji || '🍾', qty: 1 }); }
+    syncCartUI();
+  }
+
+  function handleCartBtn(btn, name) {
+    if (cart.some(c => c.name === name)) {
+      openCart();
+    } else {
+      addToCart(name);
+      btn.textContent = '✓ In Cart';
+      btn.classList.add('in-cart');
+    }
+  }
+
+  function removeFromCart(name) {
+    cart = cart.filter(c => c.name !== name);
+    syncCartUI();
+    renderCartBody();
+    document.querySelectorAll('.p-cart-btn,.deal-cart-btn').forEach(btn => {
+      if (btn.getAttribute('onclick')?.includes(esc(name))) {
+        btn.textContent = btn.classList.contains('deal-cart-btn') ? '+ Add to Pickup' : '+ Add';
+        btn.classList.remove('in-cart');
+      }
+    });
+  }
+
+  function changeQty(name, delta) {
+    const item = cart.find(c => c.name === name);
+    if (!item) return;
+    item.qty = Math.max(0, item.qty + delta);
+    if (item.qty === 0) { removeFromCart(name); return; }
+    syncCartUI();
+    renderCartBody();
+  }
+
+  function syncCartUI() {
+    const count = cart.reduce((s, c) => s + c.qty, 0);
+    const total = cart.reduce((s, c) => s + c.price * c.qty, 0);
+    const badge = document.getElementById('cartBadge');
+    if (badge) { badge.textContent = count; badge.style.display = count ? '' : 'none'; }
+    const totalEl = document.getElementById('cartTotal');
+    if (totalEl) totalEl.textContent = '$' + total.toFixed(2);
+    const checkBtn = document.getElementById('cartCheckoutBtn');
+    if (checkBtn) checkBtn.disabled = !cart.length;
+    // Pre-fill order textarea
+    const ta = document.getElementById('orderItemsArea');
+    if (ta) ta.value = cart.map(c => `${c.qty}x ${c.name}${c.size ? ' ('+c.size+')' : ''} — $${(c.price*c.qty).toFixed(2)}`).join('\n');
+  }
+
+  function renderCartBody() {
+    const body = document.getElementById('cartBody');
+    if (!body) return;
+    if (!cart.length) {
+      body.innerHTML = '<div class="cart-empty"><div class="ce-icon">🛒</div><p>Your cart is empty.<br/>Browse products and tap <strong>+ Add</strong>.</p></div>';
+      return;
+    }
+    body.innerHTML = cart.map(c => `
+      <div class="cart-item-row">
+        <div class="ci-info">
+          <div class="ci-name">${c.name}</div>
+          <div class="ci-size">${c.size}</div>
+        </div>
+        <div class="ci-qty">
+          <button class="qty-btn" onclick="changeQty('${esc(c.name)}',-1)">−</button>
+          <span class="qty-val">${c.qty}</span>
+          <button class="qty-btn" onclick="changeQty('${esc(c.name)}',1)">+</button>
+        </div>
+        <span class="ci-price">$${(c.price*c.qty).toFixed(2)}</span>
+        <button class="ci-remove" onclick="removeFromCart('${esc(c.name)}')" title="Remove">✕</button>
+      </div>`).join('');
+  }
+
+  function openCart() {
+    renderCartBody();
+    syncCartUI();
+    document.getElementById('cartOverlay').classList.add('open');
+    document.getElementById('cartDrawer').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeCart() {
+    document.getElementById('cartOverlay').classList.remove('open');
+    document.getElementById('cartDrawer').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function goToPickup() {
+    closeCart();
+    setTimeout(() => document.getElementById('order').scrollIntoView({ behavior: 'smooth' }), 280);
+  }
+
+  // ── Order ──
   function submitOrder(e) {
     e.preventDefault();
-    showToast('&#10003; <strong>Order received!</strong> We\'ll call you to confirm shortly.');
-    e.target.reset();
+    const form = e.target;
+    const firstName  = form.querySelector('input[placeholder="John"]').value.trim();
+    const lastName   = form.querySelector('input[placeholder="Doe"]').value.trim();
+    const phone      = form.querySelector('input[type="tel"]').value.trim();
+    const email      = form.querySelector('input[type="email"]')?.value.trim() || '';
+    const pickupTime = form.querySelector('select').value;
+    const notes      = document.getElementById('orderItemsArea').value.trim();
+
+    const itemsList = cart.length
+      ? cart.map(c => `• ${c.qty}x ${c.name}${c.size?' ('+c.size+')':''} — $${(c.price*c.qty).toFixed(2)}`).join('\n')
+      : notes || '(See special requests)';
+    const orderTotal = cart.length
+      ? '$' + cart.reduce((s,c) => s + c.price*c.qty, 0).toFixed(2)
+      : '';
+
+    const clearOrder = () => {
+      form.reset();
+      cart = [];
+      syncCartUI();
+      renderCartBody();
+      document.querySelectorAll('.p-cart-btn,.deal-cart-btn').forEach(btn => {
+        if (btn.classList.contains('in-cart')) {
+          btn.textContent = btn.classList.contains('deal-cart-btn') ? '+ Add to Pickup' : '+ Add';
+          btn.classList.remove('in-cart');
+        }
+      });
+    };
+
+    if (EMAILJS_PUBLIC_KEY && EMAILJS_SERVICE_ID && EMAILJS_TEMPLATE_ID) {
+      emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+      const submitBtn = form.querySelector('.submit-btn');
+      submitBtn.textContent = 'Sending…';
+      submitBtn.disabled = true;
+      emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+        customer_name:  firstName + ' ' + lastName,
+        customer_phone: phone,
+        customer_email: email || 'Not provided',
+        pickup_time:    pickupTime,
+        items_list:     itemsList,
+        order_total:    orderTotal || 'See items',
+      }).then(() => {
+        showToast('✓ <strong>Order sent!</strong> We\'ll call to confirm shortly. Pay at the store.');
+        clearOrder();
+      }).catch(err => {
+        console.error('EmailJS:', err);
+        showToast('⚠ Could not send — please call us at (720) 555-0199.');
+      }).finally(() => {
+        submitBtn.textContent = 'Request Pickup →';
+        submitBtn.disabled = false;
+      });
+    } else {
+      showToast('✓ <strong>Order received!</strong> We\'ll call to confirm. Pay at the store.');
+      clearOrder();
+    }
+  }
+
+  // ── Open / Closed status ──
+  function updateOpenStatus() {
+    // [openH, openM, closeH, closeM] — closeH can be >23 for past-midnight close
+    const HOURS = [
+      [ 9, 30, 22,  0],  // Sun   9:30am – 10pm
+      [10,  0, 24,  0],  // Mon  10am – 12am (midnight)
+      [10,  0, 24,  0],  // Tue
+      [10,  0, 24,  0],  // Wed
+      [10,  0, 24,  0],  // Thu
+      [10,  0, 25,  0],  // Fri  10am – 1am (next day)
+      [10,  0, 25,  0],  // Sat  10am – 1am (next day)
+    ];
+    const DAY = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+    function fmt(h, m) {
+      // h is already normalised (0-23)
+      const s  = h >= 12 ? 'pm' : 'am';
+      const hh = h > 12 ? h - 12 : (h === 0 ? 12 : h);
+      return m ? `${hh}:${String(m).padStart(2,'0')}${s}` : `${hh}${s}`;
+    }
+
+    const now = new Date();
+    const day = now.getDay();
+    const cur = now.getHours() * 60 + now.getMinutes();
+
+    const dot    = document.getElementById('openDot');
+    const status = document.getElementById('openStatus');
+    if (!dot || !status) return;
+
+    const [oh, om, ch, cm] = HOURS[day];
+    const openMins  = oh * 60 + om;
+    const closeMins = ch * 60 + cm; // may exceed 1440 for past-midnight
+
+    // Normalised close label (e.g. 24→"12am", 25→"1am")
+    const closeLabel = fmt(ch >= 24 ? ch - 24 : ch, cm);
+
+    let isOpen = cur >= openMins && cur < Math.min(closeMins, 1440);
+
+    // Check if we're in yesterday's past-midnight window (Fri/Sat closing at 1am)
+    let pastMidnightLabel = '';
+    if (!isOpen) {
+      const prevDay      = (day + 6) % 7;
+      const [,,pch, pcm] = HOURS[prevDay];
+      const prevClose    = pch * 60 + pcm;
+      if (prevClose > 1440 && cur < prevClose - 1440) {
+        isOpen           = true;
+        pastMidnightLabel = fmt(pch - 24, pcm); // closing time label
+      }
+    }
+
+    if (isOpen) {
+      dot.style.background = '#3cba54';
+      dot.style.boxShadow  = '0 0 6px #3cba54';
+      status.textContent   = `Open · Closes ${pastMidnightLabel || closeLabel}`;
+    } else {
+      dot.style.background = '#e53e3e';
+      dot.style.boxShadow  = '0 0 6px #e53e3e';
+      if (cur < openMins) {
+        status.textContent = `Closed · Opens ${fmt(oh, om)}`;
+      } else {
+        const nd       = (day + 1) % 7;
+        const [noh, nom] = HOURS[nd];
+        status.textContent = `Closed · Opens ${DAY[nd]} ${fmt(noh, nom)}`;
+      }
+    }
   }
 
   function showToast(msg) {
@@ -1217,6 +973,84 @@
     clearTimeout(t._timer);
     t._timer = setTimeout(() => t.classList.remove('show'), 3500);
   }
+
+  // ── Image helpers ──
+  function slugify(s) {
+    return (s || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  }
+
+  function showImg(imgEl, emojiId) {
+    imgEl.style.display = 'block';
+    const e = document.getElementById(emojiId);
+    if (e) e.style.display = 'none';
+  }
+
+  function hideImg(imgEl, emojiId) {
+    imgEl.style.display = 'none';
+    const e = document.getElementById(emojiId);
+    if (e) e.style.display = '';
+  }
+
+  // Cache: product name → image URL string (empty string = not found)
+  const imgCache = {};
+  // Generation counters to abort stale image-load loops on re-render
+  const _gen = { d: 0, p: 0 };
+
+  async function fetchProductImage(name) {
+    if (name in imgCache) return imgCache[name];
+    imgCache[name] = '';
+    if (!SERPER_API_KEY) return '';
+
+    // Strip size info: "Hennessy VSOP 750ml" → "Hennessy VSOP bottle"
+    const q = name
+      .replace(/\b\d+(\.\d+)?\s*(ml|l|oz|fl\.?\s*oz|liter|litre|pack|pk|ct|6-pack|12-pack)\b/gi, '')
+      .replace(/\s{2,}/g, ' ')
+      .trim() + ' bottle';
+
+    try {
+      const controller = new AbortController();
+      const tid = setTimeout(() => controller.abort(), 7000);
+      const res = await fetch('https://google.serper.dev/images', {
+        method: 'POST',
+        signal: controller.signal,
+        headers: {
+          'X-API-KEY': SERPER_API_KEY,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ q, num: 3 })
+      });
+      clearTimeout(tid);
+      if (!res.ok) { console.error('Serper error', res.status, await res.text()); return ''; }
+      const d = await res.json();
+      const hit = (d.images || [])[0];
+      if (hit) imgCache[name] = hit.imageUrl || hit.thumbnailUrl || '';
+    } catch(e) { console.error('fetchProductImage error:', e); }
+
+    return imgCache[name];
+  }
+
+  // After rendering a section, lazy-load images for products that have no direct URL.
+  // prefix is 'd' (deals) or 'p' (products).
+  async function lazyLoadImages(products, prefix) {
+    const myGen = ++_gen[prefix];
+    for (const p of products) {
+      if (_gen[prefix] !== myGen) return; // re-render happened, abort
+      if (p.Image) continue; // already handled via onload in the HTML
+      const slug = slugify(p.Name);
+      const url = await fetchProductImage(p.Name);
+      if (_gen[prefix] !== myGen) return;
+      if (!url) continue;
+      const imgEl = document.getElementById(prefix + '-img-' + slug);
+      if (imgEl && !imgEl.src) {
+        imgEl.src = url;
+        imgEl.style.display = 'block';
+        const emojiEl = document.getElementById(prefix + '-emoji-' + slug);
+        if (emojiEl) emojiEl.style.display = 'none';
+      }
+    }
+  }
+
+  function esc(s) { return (s || '').replace(/'/g, "\\'"); }
 </script>
 
 </body>
