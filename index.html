@@ -127,6 +127,10 @@
     .p-foot { display: flex; align-items: center; justify-content: space-between; }
     .p-price { font-family: 'Anton', sans-serif; font-size: 1.25rem; color: var(--dark); letter-spacing: .5px; }
     .p-coming { font-family: 'Oswald', sans-serif; font-size: .62rem; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); background: var(--bg); border: 1px solid var(--border); padding: 3px 8px; border-radius: 3px; }
+    .p-variants { display:flex; flex-wrap:wrap; gap:5px; margin:.3rem 0 .6rem; }
+    .p-var-btn { font-family:'Oswald',sans-serif; font-size:.62rem; font-weight:600; letter-spacing:.8px; text-transform:uppercase; padding:3px 9px; border-radius:3px; border:1.5px solid var(--border); background:var(--bg); color:var(--mid); cursor:pointer; transition:all .15s; white-space:nowrap; }
+    .p-var-btn.active { border-color:var(--red); color:var(--red); background:var(--red-soft); }
+    .p-orig { font-size:.72rem; color:var(--muted); text-decoration:line-through; margin-right:4px; vertical-align:middle; }
 
     /* LOADING / EMPTY STATES */
     .loading-wrap { text-align: center; padding: 3rem 1rem; color: var(--muted); }
@@ -523,27 +527,85 @@
 
   // Fallback products shown when no sheet is connected yet
   const FALLBACK = [
-    { Name:"Jack Daniel's Old No. 7", Category:"whiskey", Price:"24.99", OriginalPrice:"", Size:"750ml", Description:"Tennessee Whiskey", IsDeals:"FALSE", DealLabel:"", DealExpiry:"", Emoji:"🥃" },
-    { Name:"Johnnie Walker Black",    Category:"whiskey", Price:"35.99", OriginalPrice:"", Size:"750ml", Description:"Blended Scotch", IsDeals:"FALSE", DealLabel:"", DealExpiry:"", Emoji:"🥃" },
-    { Name:"Maker's Mark Bourbon",    Category:"whiskey", Price:"31.99", OriginalPrice:"39.99", Size:"750ml", Description:"Smooth Kentucky bourbon with a sweet finish", IsDeals:"TRUE", DealLabel:"20% OFF", DealExpiry:"May 2 2026", Emoji:"🥃" },
-    { Name:"Grey Goose",              Category:"vodka",   Price:"31.99", OriginalPrice:"", Size:"750ml", Description:"Premium French Vodka", IsDeals:"FALSE", DealLabel:"", DealExpiry:"", Emoji:"🍸" },
-    { Name:"Tito's Handmade",         Category:"vodka",   Price:"22.99", OriginalPrice:"", Size:"750ml", Description:"American Craft Vodka", IsDeals:"FALSE", DealLabel:"", DealExpiry:"", Emoji:"🍸" },
-    { Name:"Kim Crawford Sauv. Blanc",Category:"wine",    Price:"14.99", OriginalPrice:"", Size:"750ml", Description:"New Zealand Sauvignon Blanc", IsDeals:"FALSE", DealLabel:"", DealExpiry:"", Emoji:"🍷" },
-    { Name:"Meiomi Pinot Noir",       Category:"wine",    Price:"16.99", OriginalPrice:"19.99", Size:"750ml", Description:"Silky California Pinot with rich berry notes", IsDeals:"TRUE", DealLabel:"BUY 2", DealExpiry:"Apr 30 2026", Emoji:"🍷" },
-    { Name:"La Marca Prosecco",       Category:"wine",    Price:"17.99", OriginalPrice:"", Size:"750ml", Description:"Italian Sparkling Wine", IsDeals:"FALSE", DealLabel:"", DealExpiry:"", Emoji:"🍾" },
-    { Name:"Patron Silver",           Category:"tequila", Price:"44.99", OriginalPrice:"", Size:"750ml", Description:"Blanco Tequila", IsDeals:"FALSE", DealLabel:"", DealExpiry:"", Emoji:"🌵" },
-    { Name:"Casamigos Blanco",        Category:"tequila", Price:"34.99", OriginalPrice:"49.99", Size:"750ml", Description:"Ultra-premium small batch tequila", IsDeals:"TRUE", DealLabel:"30% OFF", DealExpiry:"May 5 2026", Emoji:"🌵" },
-    { Name:"Don Julio Blanco",        Category:"tequila", Price:"52.99", OriginalPrice:"", Size:"750ml", Description:"100% Blue Agave", IsDeals:"FALSE", DealLabel:"", DealExpiry:"", Emoji:"🥂" },
-    { Name:"Modelo Especial",         Category:"beer",    Price:"8.49",  OriginalPrice:"10.99", Size:"6-Pack", Description:"Rich pilsner-style lager, always cold", IsDeals:"TRUE", DealLabel:"6-PACK", DealExpiry:"Apr 28 2026", Emoji:"🍺" },
-    { Name:"Heineken Original",       Category:"beer",    Price:"17.99", OriginalPrice:"", Size:"12-Pack", Description:"Dutch Premium Lager", IsDeals:"FALSE", DealLabel:"", DealExpiry:"", Emoji:"🍺" },
-    { Name:"Blue Moon Belgian White", Category:"beer",    Price:"10.49", OriginalPrice:"", Size:"6-Pack",  Description:"Craft Wheat Ale", IsDeals:"FALSE", DealLabel:"", DealExpiry:"", Emoji:"🍻" },
-    { Name:"Bacardi Superior",        Category:"rum",     Price:"14.99", OriginalPrice:"", Size:"750ml", Description:"White Rum", IsDeals:"FALSE", DealLabel:"", DealExpiry:"", Emoji:"🍹" },
-    { Name:"Captain Morgan Spiced",   Category:"rum",     Price:"18.99", OriginalPrice:"", Size:"750ml", Description:"Spiced Rum", IsDeals:"FALSE", DealLabel:"", DealExpiry:"", Emoji:"🥃" },
+    // WHISKEY
+    { Name:"Jack Daniel's",        Category:"whiskey", Price:"14.99", OriginalPrice:"",    Size:"375ml",  Description:"Tennessee Old No. 7 Whiskey",     IsDeals:"FALSE", DealLabel:"",          DealExpiry:"",          Emoji:"🥃" },
+    { Name:"Jack Daniel's",        Category:"whiskey", Price:"24.99", OriginalPrice:"",    Size:"750ml",  Description:"Tennessee Old No. 7 Whiskey",     IsDeals:"FALSE", DealLabel:"",          DealExpiry:"",          Emoji:"🥃" },
+    { Name:"Jack Daniel's",        Category:"whiskey", Price:"44.99", OriginalPrice:"",    Size:"1.75L",  Description:"Tennessee Old No. 7 Whiskey",     IsDeals:"FALSE", DealLabel:"",          DealExpiry:"",          Emoji:"🥃" },
+    { Name:"Johnnie Walker Black", Category:"whiskey", Price:"35.99", OriginalPrice:"",    Size:"750ml",  Description:"12-Year Blended Scotch Whisky",   IsDeals:"FALSE", DealLabel:"",          DealExpiry:"",          Emoji:"🥃" },
+    { Name:"Johnnie Walker Black", Category:"whiskey", Price:"45.99", OriginalPrice:"",    Size:"1L",     Description:"12-Year Blended Scotch Whisky",   IsDeals:"FALSE", DealLabel:"",          DealExpiry:"",          Emoji:"🥃" },
+    { Name:"Maker's Mark",         Category:"whiskey", Price:"31.99", OriginalPrice:"39.99",Size:"750ml", Description:"Kentucky Straight Bourbon",        IsDeals:"TRUE",  DealLabel:"20% OFF",   DealExpiry:"May 31 2026",Emoji:"🥃" },
+    { Name:"Maker's Mark",         Category:"whiskey", Price:"59.99", OriginalPrice:"",    Size:"1.75L",  Description:"Kentucky Straight Bourbon",        IsDeals:"FALSE", DealLabel:"",          DealExpiry:"",          Emoji:"🥃" },
+    { Name:"Crown Royal",          Category:"whiskey", Price:"29.99", OriginalPrice:"",    Size:"750ml",  Description:"Canadian Blended Whisky",          IsDeals:"FALSE", DealLabel:"",          DealExpiry:"",          Emoji:"🥃" },
+    { Name:"Crown Royal",          Category:"whiskey", Price:"54.99", OriginalPrice:"",    Size:"1.75L",  Description:"Canadian Blended Whisky",          IsDeals:"FALSE", DealLabel:"",          DealExpiry:"",          Emoji:"🥃" },
+    // VODKA
+    { Name:"Grey Goose",           Category:"vodka",   Price:"31.99", OriginalPrice:"",    Size:"750ml",  Description:"Premium French Vodka",             IsDeals:"FALSE", DealLabel:"",          DealExpiry:"",          Emoji:"🍸" },
+    { Name:"Grey Goose",           Category:"vodka",   Price:"54.99", OriginalPrice:"",    Size:"1.75L",  Description:"Premium French Vodka",             IsDeals:"FALSE", DealLabel:"",          DealExpiry:"",          Emoji:"🍸" },
+    { Name:"Tito's Handmade",      Category:"vodka",   Price:"22.99", OriginalPrice:"",    Size:"750ml",  Description:"American Craft Vodka",             IsDeals:"FALSE", DealLabel:"",          DealExpiry:"",          Emoji:"🍸" },
+    { Name:"Tito's Handmade",      Category:"vodka",   Price:"39.99", OriginalPrice:"",    Size:"1.75L",  Description:"American Craft Vodka",             IsDeals:"FALSE", DealLabel:"",          DealExpiry:"",          Emoji:"🍸" },
+    { Name:"Absolut Vodka",        Category:"vodka",   Price:"19.99", OriginalPrice:"24.99",Size:"750ml", Description:"Swedish Winter Wheat Vodka",       IsDeals:"TRUE",  DealLabel:"BEST VALUE",DealExpiry:"May 15 2026",Emoji:"🍸" },
+    { Name:"Absolut Vodka",        Category:"vodka",   Price:"34.99", OriginalPrice:"",    Size:"1.75L",  Description:"Swedish Winter Wheat Vodka",       IsDeals:"FALSE", DealLabel:"",          DealExpiry:"",          Emoji:"🍸" },
+    // RUM
+    { Name:"Bacardi Superior",     Category:"rum",     Price:"14.99", OriginalPrice:"",    Size:"750ml",  Description:"Puerto Rican White Rum",           IsDeals:"FALSE", DealLabel:"",          DealExpiry:"",          Emoji:"🍹" },
+    { Name:"Bacardi Superior",     Category:"rum",     Price:"26.99", OriginalPrice:"",    Size:"1.75L",  Description:"Puerto Rican White Rum",           IsDeals:"FALSE", DealLabel:"",          DealExpiry:"",          Emoji:"🍹" },
+    { Name:"Captain Morgan Spiced",Category:"rum",     Price:"18.99", OriginalPrice:"",    Size:"750ml",  Description:"Original Spiced Rum",              IsDeals:"FALSE", DealLabel:"",          DealExpiry:"",          Emoji:"🍹" },
+    { Name:"Captain Morgan Spiced",Category:"rum",     Price:"32.99", OriginalPrice:"",    Size:"1.75L",  Description:"Original Spiced Rum",              IsDeals:"FALSE", DealLabel:"",          DealExpiry:"",          Emoji:"🍹" },
+    { Name:"Malibu Coconut Rum",   Category:"rum",     Price:"17.99", OriginalPrice:"21.99",Size:"750ml", Description:"Caribbean Coconut Rum",            IsDeals:"TRUE",  DealLabel:"SUMMER PICK",DealExpiry:"Jun 30 2026",Emoji:"🍹" },
+    // TEQUILA
+    { Name:"Patron Silver",        Category:"tequila", Price:"24.99", OriginalPrice:"",    Size:"375ml",  Description:"100% Weber Blue Agave Blanco",     IsDeals:"FALSE", DealLabel:"",          DealExpiry:"",          Emoji:"🌵" },
+    { Name:"Patron Silver",        Category:"tequila", Price:"44.99", OriginalPrice:"",    Size:"750ml",  Description:"100% Weber Blue Agave Blanco",     IsDeals:"FALSE", DealLabel:"",          DealExpiry:"",          Emoji:"🌵" },
+    { Name:"Patron Silver",        Category:"tequila", Price:"84.99", OriginalPrice:"",    Size:"1.75L",  Description:"100% Weber Blue Agave Blanco",     IsDeals:"FALSE", DealLabel:"",          DealExpiry:"",          Emoji:"🌵" },
+    { Name:"Casamigos Blanco",     Category:"tequila", Price:"34.99", OriginalPrice:"49.99",Size:"750ml", Description:"Ultra-premium small batch",         IsDeals:"TRUE",  DealLabel:"30% OFF",   DealExpiry:"May 5 2026", Emoji:"🌵" },
+    { Name:"Casamigos Blanco",     Category:"tequila", Price:"49.99", OriginalPrice:"",    Size:"1L",     Description:"Ultra-premium small batch",         IsDeals:"FALSE", DealLabel:"",          DealExpiry:"",          Emoji:"🌵" },
+    { Name:"Don Julio Blanco",     Category:"tequila", Price:"52.99", OriginalPrice:"",    Size:"750ml",  Description:"100% Blue Agave, estate grown",    IsDeals:"FALSE", DealLabel:"",          DealExpiry:"",          Emoji:"🌵" },
+    { Name:"Don Julio Blanco",     Category:"tequila", Price:"99.99", OriginalPrice:"",    Size:"1.75L",  Description:"100% Blue Agave, estate grown",    IsDeals:"FALSE", DealLabel:"",          DealExpiry:"",          Emoji:"🌵" },
+    { Name:"Jose Cuervo Gold",     Category:"tequila", Price:"19.99", OriginalPrice:"",    Size:"750ml",  Description:"Joven Gold Tequila Blend",          IsDeals:"FALSE", DealLabel:"",          DealExpiry:"",          Emoji:"🌵" },
+    { Name:"Jose Cuervo Gold",     Category:"tequila", Price:"34.99", OriginalPrice:"",    Size:"1.75L",  Description:"Joven Gold Tequila Blend",          IsDeals:"FALSE", DealLabel:"",          DealExpiry:"",          Emoji:"🌵" },
+    // WINE
+    { Name:"Kim Crawford Sauv. Blanc",Category:"wine", Price:"14.99", OriginalPrice:"",    Size:"750ml",  Description:"New Zealand Sauvignon Blanc",       IsDeals:"FALSE", DealLabel:"",          DealExpiry:"",          Emoji:"🍷" },
+    { Name:"Kim Crawford Sauv. Blanc",Category:"wine", Price:"27.99", OriginalPrice:"",    Size:"1.5L",   Description:"New Zealand Sauvignon Blanc",       IsDeals:"FALSE", DealLabel:"",          DealExpiry:"",          Emoji:"🍷" },
+    { Name:"Meiomi Pinot Noir",    Category:"wine",    Price:"16.99", OriginalPrice:"19.99",Size:"750ml", Description:"Silky California Pinot, rich berry", IsDeals:"TRUE",  DealLabel:"BUY 2 SAVE",DealExpiry:"Apr 30 2026",Emoji:"🍷" },
+    { Name:"Josh Cellars Cabernet",Category:"wine",    Price:"12.99", OriginalPrice:"",    Size:"750ml",  Description:"California Cabernet Sauvignon",     IsDeals:"FALSE", DealLabel:"",          DealExpiry:"",          Emoji:"🍷" },
+    { Name:"Josh Cellars Cabernet",Category:"wine",    Price:"22.99", OriginalPrice:"",    Size:"1.5L",   Description:"California Cabernet Sauvignon",     IsDeals:"FALSE", DealLabel:"",          DealExpiry:"",          Emoji:"🍷" },
+    { Name:"La Marca Prosecco",    Category:"wine",    Price:"17.99", OriginalPrice:"",    Size:"750ml",  Description:"Italian Extra Dry Sparkling Wine",  IsDeals:"FALSE", DealLabel:"",          DealExpiry:"",          Emoji:"🍾" },
+    // BRANDY / COGNAC
+    { Name:"Hennessy VS",          Category:"brandy",  Price:"19.99", OriginalPrice:"",    Size:"375ml",  Description:"Very Special Cognac",               IsDeals:"FALSE", DealLabel:"",          DealExpiry:"",          Emoji:"🥃" },
+    { Name:"Hennessy VS",          Category:"brandy",  Price:"34.99", OriginalPrice:"",    Size:"750ml",  Description:"Very Special Cognac",               IsDeals:"FALSE", DealLabel:"",          DealExpiry:"",          Emoji:"🥃" },
+    { Name:"Hennessy VS",          Category:"brandy",  Price:"64.99", OriginalPrice:"",    Size:"1.75L",  Description:"Very Special Cognac",               IsDeals:"FALSE", DealLabel:"",          DealExpiry:"",          Emoji:"🥃" },
+    { Name:"Hennessy VSOP",        Category:"brandy",  Price:"54.99", OriginalPrice:"",    Size:"750ml",  Description:"Very Superior Old Pale",            IsDeals:"FALSE", DealLabel:"",          DealExpiry:"",          Emoji:"🥃" },
+    { Name:"Hennessy VSOP",        Category:"brandy",  Price:"99.99", OriginalPrice:"",    Size:"1.75L",  Description:"Very Superior Old Pale",            IsDeals:"FALSE", DealLabel:"",          DealExpiry:"",          Emoji:"🥃" },
+    { Name:"E&J VSOP Brandy",      Category:"brandy",  Price:"14.99", OriginalPrice:"18.99",Size:"750ml", Description:"California VSOP Brandy",            IsDeals:"TRUE",  DealLabel:"EVERYDAY VALUE",DealExpiry:"",       Emoji:"🥃" },
+    { Name:"E&J VSOP Brandy",      Category:"brandy",  Price:"26.99", OriginalPrice:"",    Size:"1.75L",  Description:"California VSOP Brandy",            IsDeals:"FALSE", DealLabel:"",          DealExpiry:"",          Emoji:"🥃" },
+    // BEER
+    { Name:"Corona Extra",         Category:"beer",    Price:"8.99",  OriginalPrice:"",    Size:"6-Pack", Description:"Mexican Lager, crisp & refreshing", IsDeals:"FALSE", DealLabel:"",          DealExpiry:"",          Emoji:"🍺" },
+    { Name:"Corona Extra",         Category:"beer",    Price:"16.99", OriginalPrice:"",    Size:"12-Pack",Description:"Mexican Lager, crisp & refreshing", IsDeals:"FALSE", DealLabel:"",          DealExpiry:"",          Emoji:"🍺" },
+    { Name:"Corona Extra",         Category:"beer",    Price:"29.99", OriginalPrice:"",    Size:"24-Pack",Description:"Mexican Lager, crisp & refreshing", IsDeals:"FALSE", DealLabel:"",          DealExpiry:"",          Emoji:"🍺" },
+    { Name:"Modelo Especial",      Category:"beer",    Price:"8.49",  OriginalPrice:"10.99",Size:"6-Pack", Description:"Rich pilsner-style lager",         IsDeals:"TRUE",  DealLabel:"6-PACK DEAL",DealExpiry:"May 31 2026",Emoji:"🍺" },
+    { Name:"Modelo Especial",      Category:"beer",    Price:"15.99", OriginalPrice:"",    Size:"12-Pack",Description:"Rich pilsner-style lager",          IsDeals:"FALSE", DealLabel:"",          DealExpiry:"",          Emoji:"🍺" },
+    { Name:"Modelo Especial",      Category:"beer",    Price:"28.99", OriginalPrice:"",    Size:"24-Pack",Description:"Rich pilsner-style lager",          IsDeals:"FALSE", DealLabel:"",          DealExpiry:"",          Emoji:"🍺" },
+    { Name:"Heineken Original",    Category:"beer",    Price:"9.99",  OriginalPrice:"",    Size:"6-Pack", Description:"Dutch Premium Lager",               IsDeals:"FALSE", DealLabel:"",          DealExpiry:"",          Emoji:"🍺" },
+    { Name:"Heineken Original",    Category:"beer",    Price:"17.99", OriginalPrice:"",    Size:"12-Pack",Description:"Dutch Premium Lager",               IsDeals:"FALSE", DealLabel:"",          DealExpiry:"",          Emoji:"🍺" },
+    { Name:"Bud Light",            Category:"beer",    Price:"7.49",  OriginalPrice:"",    Size:"6-Pack", Description:"American Light Lager",              IsDeals:"FALSE", DealLabel:"",          DealExpiry:"",          Emoji:"🍺" },
+    { Name:"Bud Light",            Category:"beer",    Price:"13.99", OriginalPrice:"",    Size:"12-Pack",Description:"American Light Lager",              IsDeals:"FALSE", DealLabel:"",          DealExpiry:"",          Emoji:"🍺" },
+    { Name:"Bud Light",            Category:"beer",    Price:"24.99", OriginalPrice:"",    Size:"24-Pack",Description:"American Light Lager",              IsDeals:"FALSE", DealLabel:"",          DealExpiry:"",          Emoji:"🍺" },
+    { Name:"Blue Moon Belgian White",Category:"beer",  Price:"10.49", OriginalPrice:"",    Size:"6-Pack", Description:"Wheat Ale, orange peel finish",     IsDeals:"FALSE", DealLabel:"",          DealExpiry:"",          Emoji:"🍻" },
+    { Name:"Blue Moon Belgian White",Category:"beer",  Price:"18.99", OriginalPrice:"",    Size:"12-Pack",Description:"Wheat Ale, orange peel finish",     IsDeals:"FALSE", DealLabel:"",          DealExpiry:"",          Emoji:"🍻" },
+    { Name:"Dos Equis Lager",      Category:"beer",    Price:"8.99",  OriginalPrice:"10.99",Size:"6-Pack", Description:"XX Lager Especial",               IsDeals:"TRUE",  DealLabel:"WEEKEND DEAL",DealExpiry:"May 4 2026",Emoji:"🍺" },
+    { Name:"Dos Equis Lager",      Category:"beer",    Price:"16.49", OriginalPrice:"",    Size:"12-Pack",Description:"XX Lager Especial",                IsDeals:"FALSE", DealLabel:"",          DealExpiry:"",          Emoji:"🍺" },
   ];
 
   // ── State ──
-  let allProducts  = [];
-  let activeFilter = 'all';
+  let allProductsFlat = [];
+  let allProducts     = [];   // grouped by Name (each has .variants array)
+  let activeFilter    = 'all';
+
+  function groupVariants(rows) {
+    const map = new Map();
+    for (const row of rows) {
+      if (!map.has(row.Name)) map.set(row.Name, { ...row, variants: [] });
+      map.get(row.Name).variants.push({ Size: row.Size, Price: row.Price, OriginalPrice: row.OriginalPrice });
+    }
+    return [...map.values()];
+  }
 
   // ── Boot ──
   window.addEventListener('DOMContentLoaded', () => {
@@ -591,21 +653,16 @@
   }
 
   // ── Render everything ──
-  function renderAll(products) {
-    allProducts = products;
+  function renderAll(rows) {
+    allProductsFlat = rows;
+    allProducts     = groupVariants(rows);
 
-    // hero count
     const heroEl = document.getElementById('heroCount');
-    if (heroEl) heroEl.textContent = products.length + '+';
+    if (heroEl) heroEl.textContent = allProducts.length + '+';
 
-    // build filter buttons from unique categories
-    buildFilters(products);
-
-    // render deals
-    renderDeals(products.filter(p => p.IsDeals === 'TRUE' || p.IsDeals === 'true' || p.IsDeals === '1'));
-
-    // render products
-    renderProducts(products);
+    buildFilters(allProducts);
+    renderDeals(rows.filter(p => p.IsDeals === 'TRUE' || p.IsDeals === 'true' || p.IsDeals === '1'));
+    renderProducts(allProducts);
   }
 
   function buildFilters(products) {
@@ -661,9 +718,9 @@
             ${origPrice}${savings}
           </div>
           ${p.DealExpiry ? `<div class="d-expires">⏳ Expires ${p.DealExpiry}</div>` : ''}
-          <button class="deal-cart-btn${cart.some(c=>c.name===p.Name)?' in-cart':''}"
-                  onclick="handleCartBtn(this,'${esc(p.Name)}')">
-            ${cart.some(c=>c.name===p.Name)?'✓ In Cart':'+ Add to Pickup'}
+          <button class="deal-cart-btn${cart.some(c=>c.key===p.Name+'||'+p.Size)?' in-cart':''}"
+                  onclick="handleCartBtn(this,'${esc(p.Name)}','${esc(p.Size)}')">
+            ${cart.some(c=>c.key===p.Name+'||'+p.Size)?'✓ In Cart':'+ Add to Pickup'}
           </button>
         </div>
       </div>`;
@@ -701,11 +758,19 @@
 
   function productCard(p) {
     const slug = slugify(p.Name);
-    const directSrc = p.Image
-      ? `src="${p.Image}" onload="showImg(this,'p-emoji-${slug}')" `
-      : '';
+    const directSrc = p.Image ? `src="${p.Image}" onload="showImg(this,'p-emoji-${slug}')" ` : '';
+    const v0 = p.variants[0];
+    const key0 = p.Name + '||' + v0.Size;
+    const inCart0 = cart.some(c => c.key === key0);
+    const origHtml = v0.OriginalPrice ? `<span class="p-orig">$${parseFloat(v0.OriginalPrice).toFixed(2)}</span>` : '';
+    const variantsAttr = JSON.stringify(p.variants).replace(/"/g, '&quot;');
+    const sizeRow = p.variants.length > 1
+      ? `<div class="p-variants">${p.variants.map((v, i) =>
+          `<button class="p-var-btn${i===0?' active':''}" onclick="selectVariant(this.closest('.product-card'),${i})">${v.Size}</button>`
+        ).join('')}</div>`
+      : `<div style="font-size:.68rem;color:var(--muted);margin-bottom:.5rem">${v0.Size}</div>`;
     return `
-      <div class="product-card">
+      <div class="product-card" data-name="${esc(p.Name)}" data-vi="0" data-variants="${variantsAttr}">
         <div class="p-img-wrap">
           <span id="p-emoji-${slug}" class="p-img-placeholder">${p.Emoji || '🍾'}</span>
           <img id="p-img-${slug}" alt="${p.Name}" style="display:none" ${directSrc}onerror="hideImg(this,'p-emoji-${slug}')">
@@ -713,16 +778,42 @@
         <div class="p-body">
           <div class="p-cat">${p.Category || ''}</div>
           <h4>${p.Name}</h4>
-          <div class="p-vol">${p.Description || ''} · ${p.Size || ''}</div>
+          <div class="p-vol">${p.Description || ''}</div>
+          ${sizeRow}
           <div class="p-foot">
-            <span class="p-price">$${parseFloat(p.Price).toFixed(2)}</span>
-            <button class="p-cart-btn${cart.some(c=>c.name===p.Name)?' in-cart':''}"
-                    onclick="handleCartBtn(this,'${esc(p.Name)}')">
-              ${cart.some(c=>c.name===p.Name)?'✓ In Cart':'+ Add'}
+            <div>${origHtml}<span class="p-price">$${parseFloat(v0.Price).toFixed(2)}</span></div>
+            <button class="p-cart-btn${inCart0?' in-cart':''}" onclick="handleCartBtn(this)">
+              ${inCart0?'✓ In Cart':'+ Add'}
             </button>
           </div>
         </div>
       </div>`;
+  }
+
+  function selectVariant(card, idx) {
+    card.dataset.vi = idx;
+    const variants = JSON.parse(card.dataset.variants);
+    const v = variants[idx];
+
+    card.querySelectorAll('.p-var-btn').forEach((b, i) => b.classList.toggle('active', i === idx));
+
+    const priceEl = card.querySelector('.p-price');
+    if (priceEl) priceEl.textContent = '$' + parseFloat(v.Price).toFixed(2);
+
+    const foot = card.querySelector('.p-foot > div');
+    if (foot) {
+      const orig = foot.querySelector('.p-orig');
+      if (v.OriginalPrice) {
+        if (orig) orig.textContent = '$' + parseFloat(v.OriginalPrice).toFixed(2);
+        else foot.insertAdjacentHTML('afterbegin', `<span class="p-orig">$${parseFloat(v.OriginalPrice).toFixed(2)}</span>`);
+      } else if (orig) orig.remove();
+    }
+
+    const name = card.dataset.name;
+    const key = name + '||' + v.Size;
+    const inCart = cart.some(c => c.key === key);
+    const btn = card.querySelector('.p-cart-btn');
+    if (btn) { btn.textContent = inCart ? '✓ In Cart' : '+ Add'; btn.classList.toggle('in-cart', inCart); }
   }
 
   // ── Filtering & Search ──
@@ -744,42 +835,60 @@
   // ── Cart state ──
   let cart = [];
 
-  function addToCart(name) {
-    const p = allProducts.find(x => x.Name === name);
-    if (!p) return;
-    const existing = cart.find(c => c.name === name);
-    if (existing) { existing.qty++; }
-    else { cart.push({ name: p.Name, size: p.Size || '', price: parseFloat(p.Price) || 0, emoji: p.Emoji || '🍾', qty: 1 }); }
+  function handleCartBtn(btn, nameOverride, sizeOverride) {
+    let name, size, price, emoji;
+    if (nameOverride) {
+      // Deal card path — look up the specific flat row by name + size
+      const p = allProductsFlat.find(x => x.Name === nameOverride && (!sizeOverride || x.Size === sizeOverride));
+      if (!p) return;
+      name = p.Name; size = p.Size || ''; price = parseFloat(p.Price) || 0; emoji = p.Emoji || '🍾';
+    } else {
+      // Product card path — read selected variant from the card element
+      const card = btn.closest('.product-card');
+      name = card.dataset.name;
+      const vi = parseInt(card.dataset.vi) || 0;
+      const variants = JSON.parse(card.dataset.variants);
+      const v = variants[vi];
+      size = v.Size; price = parseFloat(v.Price) || 0;
+      emoji = (allProducts.find(x => x.Name === name) || {}).Emoji || '🍾';
+    }
+    const key = name + '||' + size;
+    if (cart.some(c => c.key === key)) { openCart(); return; }
+    cart.push({ key, name, size, price, emoji, qty: 1 });
+    btn.textContent = '✓ In Cart';
+    btn.classList.add('in-cart');
     syncCartUI();
   }
 
-  function handleCartBtn(btn, name) {
-    if (cart.some(c => c.name === name)) {
-      openCart();
-    } else {
-      addToCart(name);
-      btn.textContent = '✓ In Cart';
-      btn.classList.add('in-cart');
-    }
-  }
-
-  function removeFromCart(name) {
-    cart = cart.filter(c => c.name !== name);
+  function removeFromCart(key) {
+    const [name, size] = key.split('||');
+    cart = cart.filter(c => c.key !== key);
     syncCartUI();
     renderCartBody();
-    document.querySelectorAll('.p-cart-btn,.deal-cart-btn').forEach(btn => {
-      if (btn.getAttribute('onclick')?.includes(esc(name))) {
-        btn.textContent = btn.classList.contains('deal-cart-btn') ? '+ Add to Pickup' : '+ Add';
-        btn.classList.remove('in-cart');
+    // Reset product card button if that variant is currently selected
+    document.querySelectorAll('.product-card').forEach(card => {
+      if (card.dataset.name !== name) return;
+      const vi = parseInt(card.dataset.vi) || 0;
+      const variants = JSON.parse(card.dataset.variants);
+      if (variants[vi]?.Size === size) {
+        const btn = card.querySelector('.p-cart-btn');
+        if (btn) { btn.textContent = '+ Add'; btn.classList.remove('in-cart'); }
+      }
+    });
+    // Reset deal card button
+    document.querySelectorAll('.deal-cart-btn').forEach(btn => {
+      const oc = btn.getAttribute('onclick') || '';
+      if (oc.includes(esc(name)) && oc.includes(esc(size))) {
+        btn.textContent = '+ Add to Pickup'; btn.classList.remove('in-cart');
       }
     });
   }
 
-  function changeQty(name, delta) {
-    const item = cart.find(c => c.name === name);
+  function changeQty(key, delta) {
+    const item = cart.find(c => c.key === key);
     if (!item) return;
     item.qty = Math.max(0, item.qty + delta);
-    if (item.qty === 0) { removeFromCart(name); return; }
+    if (item.qty === 0) { removeFromCart(key); return; }
     syncCartUI();
     renderCartBody();
   }
@@ -812,12 +921,12 @@
           <div class="ci-size">${c.size}</div>
         </div>
         <div class="ci-qty">
-          <button class="qty-btn" onclick="changeQty('${esc(c.name)}',-1)">−</button>
+          <button class="qty-btn" onclick="changeQty('${esc(c.key)}',-1)">−</button>
           <span class="qty-val">${c.qty}</span>
-          <button class="qty-btn" onclick="changeQty('${esc(c.name)}',1)">+</button>
+          <button class="qty-btn" onclick="changeQty('${esc(c.key)}',1)">+</button>
         </div>
         <span class="ci-price">$${(c.price*c.qty).toFixed(2)}</span>
-        <button class="ci-remove" onclick="removeFromCart('${esc(c.name)}')" title="Remove">✕</button>
+        <button class="ci-remove" onclick="removeFromCart('${esc(c.key)}')" title="Remove">✕</button>
       </div>`).join('');
   }
 
