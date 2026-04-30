@@ -143,11 +143,6 @@
     .empty-state .e-icon { font-size: 2.5rem; margin-bottom: .75rem; }
     .empty-state p { font-size: .88rem; }
 
-    /* SHEET SETUP BANNER (shown until URL is configured) */
-    .setup-banner { background: #fffbea; border: 1.5px dashed #d4a017; border-radius: 6px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; font-size: .82rem; color: #7a5c00; line-height: 1.6; }
-    .setup-banner strong { color: #5a4200; }
-    .setup-banner code { background: #fef3c7; padding: 1px 5px; border-radius: 3px; font-size: .78rem; font-family: monospace; }
-
     /* ORDER */
     #order { background: var(--bg); }
     .order-wrap { display: grid; grid-template-columns: 1fr 1.1fr; gap: 3rem; align-items: start; }
@@ -346,7 +341,7 @@
 <!-- INFO STRIP -->
 <div class="info-strip">
   <div class="info-item">📍 <strong>7026 Liberty Road, Baltimore</strong></div>
-  <div class="info-item">📞 <strong>(720) 555-0199</strong></div>
+  <div class="info-item">📞 <strong>(410) 602-8919</strong></div>
   <div class="info-item">🕙 Mon–Thu <strong>10am–12am</strong></div>
   <div class="info-item">🕙 Fri–Sat <strong>10am–1am</strong></div>
   <div class="info-item">🕙 Sun <strong>9:30am–10pm</strong></div>
@@ -374,14 +369,6 @@
       <h2>SHOP OUR STORE</h2>
       <div class="s-rule"></div>
       <p>Inventory updated live from our product sheet</p>
-    </div>
-
-    <!-- SETUP BANNER — remove once sheet URL is configured -->
-    <div class="setup-banner" id="setupBanner">
-      <strong>⚙️ Store Owner Setup:</strong> Two things to configure in this file:
-      <br/>① <strong>Google Sheet</strong> — find <code>SHEET_CSV_URL</code> and paste your published CSV link. Sheet → <em>File → Share → Publish to web → CSV → copy URL</em>.
-      <br/>② <strong>Bottle Images</strong> — find <code>SERPER_API_KEY</code> and paste your free Serper.dev key. Sign up at <em>serper.dev</em> (no credit card) → copy key from dashboard → paste here.
-      <br/>With both set, bottle images load automatically from any product name — no image URLs needed in your sheet.
     </div>
 
     <!-- SEARCH -->
@@ -436,7 +423,7 @@
             <div class="form-group"><label>First Name</label><input type="text" placeholder="John" required /></div>
             <div class="form-group"><label>Last Name</label><input type="text" placeholder="Doe" required /></div>
           </div>
-          <div class="form-group"><label>Phone Number</label><input type="tel" placeholder="(720) 555-0000" required /></div>
+          <div class="form-group"><label>Phone Number</label><input type="tel" placeholder="(410) 000-0000" required /></div>
           <div class="form-group"><label>Email (optional)</label><input type="email" placeholder="john@example.com" /></div>
           <div class="form-group">
             <label>Preferred Pickup Time</label>
@@ -508,7 +495,7 @@
     </form>
   </div>
 
-  <div class="f-address">📍 123 Woodmoor Ave, Castle Rock, CO 80108<br/>📞 (720) 555-0199 &nbsp;·&nbsp; Open 7 Days a Week</div>
+  <div class="f-address">📍 7026 Liberty Road, Baltimore, MD<br/>📞 (410) 602-8919 &nbsp;·&nbsp; Open 7 Days a Week</div>
   <div class="f-legal">Please drink responsibly. You must be 21 or older to purchase alcohol. &copy; 2026 Woodmoor Lounge.</div>
 </footer>
 
@@ -540,117 +527,11 @@
 <div class="toast" id="toast"></div>
 
 <script>
-  // ─────────────────────────────────────────────────────────────
-  //  STEP 1 — Google Sheet published CSV URL
-  //
-  //  How to get it:
-  //    1. Open your Google Sheet
-  //    2. File → Share → Publish to web
-  //    3. Choose "Entire Document" + "Comma-separated values (.csv)"
-  //    4. Click Publish → copy the URL → paste below
-  //
-  //  ── Column headers (row 1 — exact spelling matters) ──────────
-  //
-  //    Name | Category | Price | OriginalPrice | Size |
-  //    Description | IsDeals | DealLabel | DealExpiry | Emoji
-  //
-  //  ── How to handle multiple sizes for one product ─────────────
-  //
-  //  Use ONE ROW PER SIZE. Repeat the product name exactly.
-  //  The site groups them automatically into a single card with
-  //  size buttons (50ml, 375ml, 750ml, 1.75L, etc.).
-  //
-  //  Example — Hennessy VS in three sizes:
-  //
-  //    Name         | Category | Price | OriginalPrice | Size   | ...
-  //    Hennessy VS  | brandy   | 7.99  |               | 50ml   | ...
-  //    Hennessy VS  | brandy   | 34.99 |               | 750ml  | ...
-  //    Hennessy VS  | brandy   | 64.99 |               | 1.75L  | ...
-  //
-  //  ── SIZE NOT IN STOCK? Leave the Price cell blank ────────────
-  //
-  //  If you carry a product in some sizes but not others, just
-  //  leave the Price column EMPTY for that size row (or remove
-  //  the row entirely). The site will NOT show that size button.
-  //
-  //  Example — you have 750ml & 1.75L but not 50ml:
-  //    Hennessy VS | brandy |       |  | 50ml  | ...  ← blank Price → hidden
-  //    Hennessy VS | brandy | 34.99 |  | 750ml | ...  ← shows ✓
-  //    Hennessy VS | brandy | 64.99 |  | 1.75L | ...  ← shows ✓
-  //
-  //  Setting Price to 0 also hides the size. Only rows with a
-  //  real dollar value greater than $0 appear on the site.
-  //
-  //  ── Deals ────────────────────────────────────────────────────
-  //  Set IsDeals = TRUE on any size row to feature it in the
-  //  Deals section. Blank Price on a deal row → still hidden.
-  //
-  //  (No Image column needed — images are fetched automatically)
-  // ─────────────────────────────────────────────────────────────
-  const SHEET_CSV_URL = '';   // ← paste URL between the quotes
-
-  // ─────────────────────────────────────────────────────────────
-  //  STEP 2 — Serper.dev Image Search (free, 2,500 searches)
-  //
-  //  One-time setup (2 minutes, no credit card):
-  //    1. Go to serper.dev → click "Get Started Free"
-  //    2. Sign up with your email
-  //    3. Copy your API key from the dashboard
-  //    4. Paste it below
-  // ─────────────────────────────────────────────────────────────
-  const SERPER_API_KEY = '3c7423024e0b8e2984e148781f48e9452e07d603';
-
-  // ─────────────────────────────────────────────────────────────
-  //  STEP 3 — EmailJS (sends order + inquiry emails, no backend)
-  //  Free plan: 200 emails/month
-  //
-  //  One-time setup (~5 minutes):
-  //    1. Go to emailjs.com → Sign Up free
-  //    2. Email Services → Add Service → connect your Gmail
-  //       → note the Service ID (looks like "service_abc123")
-  //    3. Email Templates → Create Template → paste this body:
-  //
-  //       Subject:  New {{pickup_time}} from {{customer_name}}
-  //
-  //       Name:     {{customer_name}}
-  //       Phone:    {{customer_phone}}
-  //       Email:    {{customer_email}}
-  //
-  //       Type:     {{pickup_time}}
-  //       ──────────────────────────
-  //       {{items_list}}
-  //       ──────────────────────────
-  //       Total / Note: {{order_total}}
-  //
-  //    4. In the template set "To Email" = the store owner's inbox
-  //    5. Account → General → copy your Public Key
-  //
-  //  ── What each variable carries ───────────────────────────────
-  //
-  //  Pickup order (from the #order form):
-  //    {{customer_name}}  → customer first + last name
-  //    {{customer_phone}} → customer phone number
-  //    {{customer_email}} → customer email (or "Not provided")
-  //    {{pickup_time}}    → requested pickup time
-  //    {{items_list}}     → each item, size, qty, and line price
-  //    {{order_total}}    → cart grand total
-  //
-  //  Bottle request / inquiry (from the footer form):
-  //    {{customer_name}}  → requester's name
-  //    {{customer_phone}} → their phone or email
-  //    {{customer_email}} → same contact (repeated)
-  //    {{pickup_time}}    → request type (e.g. "Bottle Request")
-  //    {{items_list}}     → the details they typed in
-  //    {{order_total}}    → "N/A — Inquiry"
-  //
-  //  Both forms share the same template — the Subject line
-  //  "New {{pickup_time}} from {{customer_name}}" will read
-  //  naturally for both:  "New Pickup Order from John Smith"
-  //                       "New Bottle Request from Maria Lopez"
-  // ─────────────────────────────────────────────────────────────
-  const EMAILJS_PUBLIC_KEY  = '';   // ← Account → General → Public Key
-  const EMAILJS_SERVICE_ID  = '';   // ← e.g. 'service_abc123'
-  const EMAILJS_TEMPLATE_ID = '';   // ← e.g. 'template_xyz789'
+  const SHEET_CSV_URL       = '';
+  const SERPER_API_KEY      = '3c7423024e0b8e2984e148781f48e9452e07d603';
+  const EMAILJS_PUBLIC_KEY  = '';
+  const EMAILJS_SERVICE_ID  = '';
+  const EMAILJS_TEMPLATE_ID = '';
 
   // Fallback products shown when no sheet is connected yet
   const FALLBACK = [
@@ -741,7 +622,6 @@
     updateOpenStatus();
     setInterval(updateOpenStatus, 60_000); // re-check every minute
     if (SHEET_CSV_URL) {
-      document.getElementById('setupBanner').style.display = 'none';
       loadFromSheet();
     } else {
       renderAll(FALLBACK);
@@ -1126,7 +1006,7 @@
         clearOrder();
       }).catch(err => {
         console.error('EmailJS:', err);
-        showToast('⚠ Could not send — please call us at (720) 555-0199.');
+        showToast('⚠ Could not send — please call us at (410) 602-8919.');
       }).finally(() => {
         submitBtn.textContent = 'Request Pickup →';
         submitBtn.disabled = false;
@@ -1159,7 +1039,7 @@
         showToast('✓ <strong>Request sent!</strong> We\'ll be in touch soon.');
         form.reset();
       }).catch(() => {
-        showToast('⚠ Could not send — please call us at (720) 555-0199.');
+        showToast('⚠ Could not send — please call us at (410) 602-8919.');
       }).finally(() => {
         btn.textContent = 'Send Request →';
         btn.disabled = false;
